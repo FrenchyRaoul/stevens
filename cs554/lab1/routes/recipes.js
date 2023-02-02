@@ -1,7 +1,8 @@
 // importing the data functions for recipe creation. Perhaps move all of this to data
-const {createRecipe, getRecipe, getRecipes, updateRecipe} = require('../data/recipes');
+const {createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment} = require('../data/recipes');
 const express = require('express');
 const router = express.Router();
+const {ObjectId} = require('mongodb');
 
 
 
@@ -29,8 +30,8 @@ router.get('/', async (req, res) => {
     let recipes = undefined;
     try {
         recipes = await getRecipes(req.query.page);
-        if (!recipes) {
-            res.stats(404).json({"error": "no recipes found"});
+        if (!recipes.length) {
+            res.status(404).json({"error": "no recipes found"});
         } else {
             res.json(recipes);
         }
@@ -99,11 +100,24 @@ router.patch('/:id', async (req, res) => {
         res.status(404).json({"error": e});
         return
     }
+
+    if (req.session.user.userId !== oldRecipe.userThatPosted._id) {
+        res.status(403).json({"error": "you are not permitted to patch this recipe"});
+        return
+    }
+
+
     const newObject = createPatchObject(oldRecipe, reqBody);
     if (isObjectEmpty(newObject)) {
         res.status(404).json({"error": "no difference between patch and existing object"})
     }
     else {
+        try {
+            await validateRecipeUpdate(newObject);
+        } catch (e) {
+            res.status(404).json({"error": e});
+            return
+        }
         try {
             const result = await updateRecipe(req.params.id, newObject);
             res.json(result);
@@ -113,13 +127,19 @@ router.patch('/:id', async (req, res) => {
     }
 })
 
-// Middleware #2: Check authentication priot to handling the post
+// Middleware #2: Check authentication prior to handling the post as per lab instructions
 router.post('/:id/comments', [checkAuthenticated,
     async (req, res) => {
-    res.send(`I found a request to post a comment to: ${req.params.id}`)
+    const {comment} = req.body;
+    try {
+        const recipe = await postComment(req.params.id, comment, req.session.user);
+        res.json(recipe);
+    } catch (e) {
+        res.status(400).json({"error": e})
+    }
 }])
 
-// Middleware #2: Check authentication priot to handling the delete
+// Middleware #2: Check authentication prior to handling the delete
 router.delete('/:recipeId/:commentId', [checkAuthenticated,
     async (req, res) => {
     const { recipeId, commentId } = req.params;

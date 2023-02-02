@@ -4,6 +4,12 @@ const router = express.Router();
 
 
 router.post('/signup', async (req, res) => {
+    // if a user is already logged in
+    if (req.session.user) {
+        res.status(400).json({"error": "a user is already logged in"})
+        return
+    }
+
     try {
         const {name, username, password} = req.body;
         const user = await createUser(name, username, password);
@@ -17,12 +23,9 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
     const {username, password} = req.body;
 
-    // if the user is already logged in with this very same username, just return
+    // if a user is already logged in
     if (req.session.user) {
-        if (req.session.user.username === username) {
-            const userObject = await getUserByUsername(username);
-            res.json({ "username": userObject.username, "userId": userObject._id })
-        }
+        res.status(400).json({"error": "a user is already logged in"})
     }
     else {
         // otherwise, attempt to log in
@@ -38,6 +41,10 @@ router.post('/login', async (req, res) => {
 
 
 router.get('/logout', async (req, res) => {
+    if (!req.session.user) {
+        res.status(400).json({"error": "you are not currently logged in"})
+        return
+    }
     req.session.destroy()
     res.json({"logout": true})
 })

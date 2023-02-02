@@ -1,4 +1,4 @@
-const {recipeCollection, commentCollection} = require('./collections');
+const {recipeCollection} = require('./collections');
 const {ObjectId} = require('mongodb');
 
 const recipes_per_page = 50;
@@ -12,8 +12,7 @@ function isIngredientValid(ingredient) {
     return !(                                // note the double negatives, would be better to not have that
         (typeof ingredient != 'string')  ||  // ingredient must be a string
         (3 > ingredient.trim().length)   ||  // ingredient must be >3 characters
-        (ingredient.trim().length >= 50) ||  // ingredient must be <51 characters
-        (/\d/.test(ingredient[0])));         // ingredient can't start with a number (maybe abstract brand name ingredients can contain numbers?)
+        (ingredient.trim().length >= 50))    // ingredient must be <51 characters
 }
 
 async function validateIngredients(ingredients) {
@@ -49,7 +48,6 @@ async function validateRecipe(recipe) {
     await validateIngredients(ingredients);
     await validateSteps(steps);
     await validateCookingSkill(skill);
-    console.log('recipe is valid')
 }
 
 async function getRecipe(id) {
@@ -64,9 +62,7 @@ async function getRecipes(page) {
     if (isNaN(page_number) || page_number < 0) throw "if a page number is provided, it must be a positive integer";
 
     const rCollection = await recipeCollection();
-    console.log('getting all recipes')
-    return await rCollection.find({});
-    // return await rCollection.find({}).sort( { _id: 1} ).skip(page_number * recipes_per_page).limit(recipes_per_page);
+    return await rCollection.find({}).sort( { _id: 1} ).skip(page_number * recipes_per_page).limit(recipes_per_page).toArray();
 }
 
 
@@ -77,12 +73,15 @@ async function createRecipe(recipe) {
     return await getRecipe(result.insertedId);
 }
 
-async function updateRecipe(id, updateObject) {
-    if (updateObject["title"]) validateRecipeTitle(updateObject["title"]);
-    if (updateObject["ingredients"]) validateIngredients(updateObject["ingredients"]);
-    if (updateObject["steps"]) validateSteps(updateObject["steps"]);
-    if (updateObject["skill"]) validateCookingSkill(updateObject["skill"]);
+async function validateRecipeUpdate(updateObject) {
+    if (updateObject["title"]) await validateRecipeTitle(updateObject["title"]);
+    if (updateObject["ingredients"]) await validateIngredients(updateObject["ingredients"]);
+    if (updateObject["steps"]) await validateSteps(updateObject["steps"]);
+    if (updateObject["skill"]) await validateCookingSkill(updateObject["skill"]);
+}
 
+async function updateRecipe(id, updateObject) {
+    // validation of the update object is handled by the caller function to separate out 404 and 500 statuses
     const rCollection = await recipeCollection();
     try {
         await rCollection.updateOne({ _id: ObjectId(id) }, { $set: updateObject });
@@ -92,5 +91,35 @@ async function updateRecipe(id, updateObject) {
     return await getRecipe(id);
 }
 
+async function validateComment(comment) {
+    if (comment === undefined) throw "comment must be provided";
+    if (!(typeof comment === 'string')) throw "comment must be a string";
+    if (comment.length < 3) throw "comment must be greater than two characters";
+}
 
-module.exports = { createRecipe, getRecipe, getRecipes, updateRecipe }
+async function postComment(recipeId, comment, user) {
+    if (recipeId === undefined) throw "recipeId must be defined";
+    if (user === undefined) throw "user must be provided";
+    await validateComment(comment);
+    const newComment = {
+        _id: new ObjectId(),
+        "userThatPostedComment": {
+            _id: user.userId,
+            username: user.username
+        },
+        "comment": comment};
+    const rCollection = await recipeCollection();
+    try {
+        console.log(recipeId);
+        const inserted = await rCollection.updateOne(
+            { _id: ObjectId(recipeId) },
+            { $push: { comments: newComment}});
+        console.log(`update results: ${inserted.matchedCount} ${inserted.modifiedCount} ${inserted.upsertedId}`)
+    } catch (e) {
+        throw `I failed to insert a comment on this recipe: ${e}`
+    }
+    return await getRecipe(recipeId);
+}
+
+
+module.exports = { createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment }
