@@ -1,0 +1,11 @@
+cs559/assignment1/trash/video_assignment.mp4.zip
+cs559/project1/properties_2016.csv
+cs559/project1/properties_2017.csv
+cs559/assignment1/trash
+**ipynb_checkpoints**
+**DS_Store**
+*.mp4
+**/node_modules
+**/logs
+.DS_Store
+.idea

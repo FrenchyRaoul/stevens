@@ -1,0 +1,29 @@
+<main id="new_recipe">
+    <div id="new-recipe-div" class="center_box">
+        <form id="recipe-form" method="POST" action="/r" onsubmit="return newRecipe()">
+            <h1>Create a new recipe:</h1>
+            <div class="input-field">
+                <label for="recipe_name">Recipe Name</label><br/>
+                <input type="text" name="name" id="recipe_name" placeholder="Recipe Name"/><br/>
+                <span id="name-error" class="form-message">{{ingredients-error}}</span><br/>
+            </div>
+            <div class="input-field">
+                Ingredients:<br/>
+                {{#each ingredients}}
+                    <label for="{{this.clean_name}}"></label>
+                    <input type="checkbox" name="ingredients" id="{{this.clean_name}}" value="{{this._id}}">{{this.name}}
+                    <label for="{{this.clean_name}}-quantity"></label>
+                    <input type="text" name="{{this._id}}-quantity" id="{{this.clean_name}}-quantity"><br/>
+                {{/each}}
+                <span id="ingredients-error" class="form-message">{{ingredients-error}}</span><br/>
+            </div>
+            <div class="input-field">
+                <label for="steps">Steps: (separated by newline)</label><br/>
+                <textarea name="steps" id="steps" rows="10" cols="75"></textarea><br/>
+                <span id="steps-error" class="form-message">{{steps-error}}</span><br/>
+            </div>
+            <input type="submit" value="Create Recipe!"/>
+        </form><br/>
+    </div>
+    <script src="/public/scripts/newRecipe.js"></script>
+</main>

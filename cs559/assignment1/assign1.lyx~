@@ -1,0 +1,968 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "palatino" "default"
+\font_sans "helvet" "default"
+\font_typewriter "courier" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 95 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Assignment 1
+\end_layout
+
+\begin_layout Author
+Nicholai L'Esperance
+\end_layout
+
+\begin_layout Date
+06/05/20
+\end_layout
+
+\begin_layout Section
+Question 1
+\end_layout
+
+\begin_layout Subsection
+By using a change of variables, verify that the univariate Gaussian distribution
+ given by
+\begin_inset Formula $\text{\ensuremath{N\left(x|\mu,\sigma^{2}\right)=\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}}}$
+\end_inset
+
+ satisfies 
+\begin_inset Formula $E\left(x\right)=\mu$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The formula for expected value is 
+\begin_inset Formula $E\left(x\right)=\int_{-\infty}^{\infty}xf\left(x\right)$
+\end_inset
+
+.
+ Thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+N\left(x|\mu,\sigma^{2}\right)=\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+E\left(N\left(x|\mu,\sigma^{2}\right)\right)=\int_{-\infty}^{\infty}x\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}
+\]
+
+\end_inset
+
+We can solve this using substitution.
+ For this, we define a new variable, v:
+\begin_inset Formula 
+\[
+v=\frac{x-\mu}{\sqrt{2}\sigma}
+\]
+
+\end_inset
+
+Differentiating, we have
+\begin_inset Formula 
+\[
+\frac{dv}{dx}=\frac{d}{dx}\left(\frac{x}{\sqrt{2}\sigma}-\frac{\mu}{\sqrt{2}\sigma}\right)=\frac{1}{\sqrt{2}\sigma}
+\]
+
+\end_inset
+
+For our substituation, we must solve for x in terms of v.
+\begin_inset Formula 
+\[
+x=\sqrt{2}\sigma v+\mu
+\]
+
+\end_inset
+
+Next, we can substitute in v, and we have:
+\begin_inset Formula 
+\[
+E\left(N\left(x|\mu,\sigma^{2}\right)\right)=\int_{-\infty}^{\infty}x\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}=\int_{-\infty}^{\infty}\left(\sqrt{2}\sigma v+\mu\right)\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-v^{2}}dx
+\]
+
+\end_inset
+
+Finally, we can substitute in dv for dx, noting 
+\begin_inset Formula $dx=2\sigma dv$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(N\left(x|\mu,\sigma^{2}\right)\right)=\int_{-\infty}^{\infty}\left(\sqrt{2}\sigma v+\mu\right)\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-v^{2}}\left(2\sigma\right)dv
+\]
+
+\end_inset
+
+Simplifying:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}\left(\sqrt{2}\sigma v+\mu\right)\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-v^{2}}\left(2\sigma\right)dv=\int_{-\infty}^{\infty}\frac{2\sigma v}{\sqrt{\pi}}e^{-v^{2}}+\frac{2\mu}{\sqrt{2\pi}}e^{-v^{2}}dv=\frac{2}{\sqrt{\pi}}\left(\sigma\int_{-\infty}^{\infty}ve^{-v^{2}}dv+\frac{\text{\mu}}{\sqrt{2}}\int_{-\infty}^{\infty}e^{-v^{2}}dv\right)
+\]
+
+\end_inset
+
+We can evaluate each of the integrals individually.
+ First
+\begin_inset Formula 
+\[
+\sigma\int_{-\infty}^{\infty}ve^{-v^{2}}=\sigma\left(-\frac{1}{2}e^{-x^{2}}\biggr\rvert_{-\infty}^{\infty}\right)=\sigma\left(0-0\right)=0
+\]
+
+\end_inset
+
+The second integral is trickier, but has a known solution.
+ The following integral is known as the 
+\begin_inset Quotes eld
+\end_inset
+
+Gaussian Integral
+\begin_inset Quotes erd
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\frac{\text{\mu}}{\sqrt{2}}\int_{-\infty}^{\infty}e^{-v^{2}}dv=\frac{\text{\mu}}{\sqrt{2}}\sqrt{\pi}
+\]
+
+\end_inset
+
+We can now arrive at our final solution:
+\begin_inset Formula 
+\[
+E\left(N\left(x|\mu,\sigma^{2}\right)\right)=\frac{2}{\sqrt{\pi}}\left(\sigma\int_{-\infty}^{\infty}ve^{-v^{2}}dv+\frac{\text{\mu}}{\sqrt{2}}\int_{-\infty}^{\infty}e^{-v^{2}}dv\right)=\frac{2}{\sqrt{2\pi}}\left(0+\frac{\text{\mu}}{\sqrt{2}}\sqrt{\pi}\right)=\frac{2\mu\sqrt{\pi}}{2\sqrt{\pi}}=\mu
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Next, by differentiating both sides of normalization condition 
+\begin_inset Formula $\int_{-\infty}^{\infty}N\left(x|\mu,\sigma^{2}\right)=1$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\sigma^{2}$
+\end_inset
+
+, verify that the Gaussian satisfies 
+\begin_inset Formula $E\left(x^{2}\right)=\mu^{2}+\sigma^{2}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Our expected value formula is defined as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(x^{2}\right)=\int_{-\infty}^{\infty}x^{2}N\left(x|\mu,\sigma^{2}\right)
+\]
+
+\end_inset
+
+First, we take our function N, and find the derivative w.r.t.
+ 
+\begin_inset Formula $\sigma$
+\end_inset
+
+.
+ This could also be done w.r.t.
+ 
+\begin_inset Formula $\sigma^{2}$
+\end_inset
+
+ via a change of variables, but I find it simpler to keep in terms of 
+\begin_inset Formula $\sigma$
+\end_inset
+
+.
+ Because we have an exponential, it is easiest to take the natural log of
+ both sides, first.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+N\left(x|\mu,\sigma^{2}\right)=\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+ln\left(N\left(x|\mu,\sigma^{2}\right)\right)=ln\left(\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\delta}{\delta\sigma}\left(ln\left(N\left(x|\mu,\sigma^{2}\right)\right)\right)=\frac{\delta}{\delta\sigma}\left(ln\left(\frac{1}{\sqrt{2\pi\sigma^{2}}}\right)+ln\left(e^{-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}}\right)\right)
+\]
+
+\end_inset
+
+We solve the derivative of the natural log using the chain rule.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{N\left(x|\mu,\sigma^{2}\right)}\frac{\delta N\left(x|\mu,\sigma^{2}\right)}{\delta\sigma}=\frac{\delta}{\delta\sigma}\left(-ln\left(\sqrt{2\pi\sigma^{2}}\right)-\frac{\left(x-\mu\right)^{2}}{2\sigma^{2}}\right)
+\]
+
+\end_inset
+
+We again use the chain rule, to solve the derivative of the natural log
+ on the right hand side.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{N\left(x|\mu,\sigma^{2}\right)}\frac{\delta N\left(x|\mu,\sigma^{2}\right)}{\delta\sigma}=-\frac{\sqrt{2\pi}}{\sqrt{2\pi\sigma^{2}}}+\frac{2\left(x-\mu\right)^{2}}{2\sigma^{3}}=\frac{\left(x-\mu\right)^{2}}{\sigma^{3}}-\frac{1}{\sigma}
+\]
+
+\end_inset
+
+Finally, we have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\delta N\left(x|\mu,\sigma^{2}\right)}{\delta\sigma}=\left(\frac{\left(x-\mu\right)^{2}}{\sigma^{3}}-\frac{1}{\sigma}\right)N\left(x|\mu,\sigma^{2}\right)
+\]
+
+\end_inset
+
+Taking a look at our normalization formula, we note the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}N\left(x|\mu,\sigma^{2}\right)dx=1
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}\frac{\delta}{\delta\theta}\left(N\left(x|\mu,\sigma^{2}\right)\right)dx=\frac{\delta}{\delta\theta}\left(1\right)=0
+\]
+
+\end_inset
+
+We can plug in our equations from above
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}\frac{\delta}{\delta\theta}\left(N\left(x|\mu,\sigma^{2}\right)\right)dx=\int_{-\infty}^{\infty}\left(\frac{\left(x-\mu\right)^{2}}{\sigma^{3}}-\frac{1}{\sigma}\right)N\left(x|\mu,\sigma^{2}\right)dx=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\int_{-\infty}^{\infty}\frac{x^{2}}{\sigma^{3}}N\left(x|\mu,\sigma^{2}\right)-\frac{2x\mu}{\sigma^{3}}N\left(x|\mu,\sigma^{2}\right)+\frac{\mu^{2}}{\sigma^{3}}N\left(x|\mu,\sigma^{2}\right)-\frac{1}{\sigma}N\left(x|\mu,\sigma^{2}\right)dx=0
+\]
+
+\end_inset
+
+We can now recognize the expected value formula here
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{\sigma^{3}}E\left(x^{2}\right)-\frac{2\mu}{\sigma^{3}}E\left(x\right)+\int_{-\infty}^{\infty}\frac{\mu^{2}}{\sigma^{3}}N\left(x|\mu,\sigma^{2}\right)dx-\int_{-\infty}^{\infty}\frac{1}{\sigma}N\left(x|\mu,\sigma^{2}\right)dx=0
+\]
+
+\end_inset
+
+The remaining two integrals are solved trivially using the normalization
+ condition above.
+ Also, the expected value of x is defined as 
+\begin_inset Formula $\mu$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{\sigma^{3}}E\left(x^{2}\right)-\frac{2\mu}{\sigma^{3}}\mu+\frac{\mu^{2}}{\sigma^{3}}-\frac{1}{\sigma}=0
+\]
+
+\end_inset
+
+Now, we solve for 
+\begin_inset Formula $E\left(x^{2}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{\sigma^{3}}E\left(x^{2}\right)-\frac{\mu^{2}}{\sigma^{3}}=\frac{1}{\sigma}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{\sigma^{3}}E\left(x^{2}\right)=\frac{1}{\sigma}+\frac{\mu^{2}}{\sigma^{3}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(x^{2}\right)=\frac{\sigma^{3}}{\sigma}+\frac{\sigma^{3}\mu^{2}}{\sigma^{3}}=\sigma^{2}+\mu^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we have proven that 
+\begin_inset Formula $E\left(x^{2}\right)=\sigma^{2}+\mu^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Question 2
+\end_layout
+
+\begin_layout Subsection
+Use 
+\begin_inset Formula $E(x)=μ$
+\end_inset
+
+ to prove 
+\begin_inset Formula $E(xx^{T})=μμ^{T}+Σ$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We know 
+\begin_inset Formula 
+\[
+E\left(\mathbf{x}\right)=\left[\begin{array}{c}
+E\left(x_{1}\right)\\
+E\left(x_{2}\right)\\
+...\\
+E\left(x_{n}\right)
+\end{array}\right]\equiv\mu,\;E\left(x^{T}\right)=\left[\begin{array}{cccc}
+E\left(x_{1}\right) & E\left(x_{2}\right) & ... & E\left(x_{n}\right)\end{array}\right]\equiv\mu^{T}
+\]
+
+\end_inset
+
+We have two matrices to evaluate.
+ First
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\text{\left(xx^{T}\right)}=E\left(\left[\begin{array}{c}
+x_{1}\\
+x_{2}\\
+...\\
+x_{n}
+\end{array}\right]\left[\begin{array}{cccc}
+x_{1} & x_{2} & ... & x_{n}\end{array}\right]\right)=E\left(\left[\begin{array}{cccc}
+x_{1}^{2} & x_{1}x_{2} & ... & x_{1}x_{n}\\
+x_{1}x_{2} & x_{2}^{2}\\
+... &  & ...\\
+x_{1}x_{n} &  &  & x_{n}^{2}
+\end{array}\right]\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+=\left[\begin{array}{cccc}
+E\left(x_{1}^{2}\right) & E\left(x_{1}x_{2}\right) & ... & E\left(x_{1}x_{n}\right)\\
+E\left(x_{1}x_{2}\right) & E\left(x_{2}^{2}\right)\\
+... &  & ...\\
+E\left(x_{1}x_{n}\right) &  &  & E\left(x_{n}^{2}\right)
+\end{array}\right]
+\]
+
+\end_inset
+
+Next
+\begin_inset Formula 
+\[
+\mu\mu^{T}=\left[\begin{array}{c}
+E\left(x_{1}\right)\\
+E\left(x_{2}\right)\\
+...\\
+E\left(x_{n}\right)
+\end{array}\right]\left[\begin{array}{cccc}
+E\left(x_{1}\right) & E\left(x_{2}\right) & ... & E\left(x_{n}\right)\end{array}\right]=\left[\begin{array}{cccc}
+E\left(x_{1}\right)^{2} & E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}\right)^{2} &  & ...\\
+... &  & ... & E\left(x_{n-1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}\right)E\left(x_{n}\right) & ... & E\left(x_{n-1}\right)E\left(x_{n}\right) & E\left(x_{n}\right)^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+The last piece of the puzzle is the covariance matrix.
+ This is defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Σ=E\text{\left(xx^{T}\right)-}E\left(x\right)E\left(x^{T}\right)
+\]
+
+\end_inset
+
+This is trivially calculated from the results above
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Sigma=\left[\begin{array}{cccc}
+E\left(x_{1}^{2}\right)-E\left(x_{1}\right)^{2} & E\left(x_{1}x_{2}\right)-E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}x_{n}\right)-E\left(x_{1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}x_{2}\right)-E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}^{2}\right)-E\left(x_{2}\right)^{2}\\
+... &  & ...\\
+E\left(x_{1}x_{n}\right)-E\left(x_{1}\right)E\left(x_{n}\right) &  &  & E\left(x_{n}^{2}\right)-E\left(x_{n}\right)^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+Finally, we arrive at the final solution.
+\size footnotesize
+
+\begin_inset Formula 
+\[
+μμ^{T}+Σ=\left[\begin{array}{cccc}
+E\left(x_{1}\right)^{2}+E\left(x_{1}^{2}\right)-E\left(x_{1}\right)^{2} & E\left(x_{1}\right)E\left(x_{2}\right)+E\left(x_{1}x_{2}\right)-E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}\right)E\left(x_{n}\right)+E\left(x_{1}x_{n}\right)-E\left(x_{1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}\right)E\left(x_{2}\right)+E\left(x_{1}x_{2}\right)-E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}\right)^{2}+E\left(x_{2}^{2}\right)-E\left(x_{2}\right)^{2}\\
+... &  & ...\\
+E\left(x_{1}\right)E\left(x_{n}\right)+E\left(x_{1}x_{n}\right)-E\left(x_{1}\right)E\left(x_{n}\right) &  &  & E\left(x_{n}\right)^{2}+E\left(x_{n}^{2}\right)-E\left(x_{n}\right)^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=\left[\begin{array}{cccc}
+E\left(x_{1}^{2}\right) & E\left(x_{1}x_{2}\right) & ... & E\left(x_{1}x_{n}\right)\\
+E\left(x_{1}x_{2}\right) & E\left(x_{2}^{2}\right)\\
+... &  & ...\\
+E\left(x_{1}x_{n}\right) &  &  & E\left(x_{n}^{2}\right)
+\end{array}\right]=E\text{\left(xx^{T}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Now, using the results two definitions, show that 
+\begin_inset Formula $E[x_{n}x_{m}]=μμ^{T}+I_{nm}Σ$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We prove this for the general case, with x being k values long.
+ We can plug our calculated values in directly to prove this equality
+\begin_inset Formula 
+\[
+μμ^{T}+I_{nm}Σ=\left[\begin{array}{cccc}
+E\left(x_{1}\right)^{2} & E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}\right)E\left(x_{k}\right)\\
+E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}\right)^{2} &  & ...\\
+... &  & ... & E\left(x_{k-1}\right)E\left(x_{k}\right)\\
+E\left(x_{1}\right)E\left(x_{k}\right) & ... & E\left(x_{k-1}\right)E\left(x_{k}\right) & E\left(x_{k}\right)^{2}
+\end{array}\right]+
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left[\begin{array}{cccc}
+1 & 0 & ... & 0\\
+0 & 1\\
+... &  & ...\\
+0 &  &  & 1
+\end{array}\right]\left[\begin{array}{cccc}
+E\left(x_{1}^{2}\right)-E\left(x_{1}\right)^{2} & E\left(x_{1}x_{2}\right)-E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}x_{k}\right)-E\left(x_{1}\right)E\left(x_{k}\right)\\
+E\left(x_{1}x_{2}\right)-E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}^{2}\right)-E\left(x_{2}\right)^{2}\\
+... &  & ...\\
+E\left(x_{1}x_{k}\right)-E\left(x_{1}\right)E\left(x_{k}\right) &  &  & E\left(x_{k}^{2}\right)-E\left(x_{k}\right)^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=\left[\begin{array}{cccc}
+E\left(x_{1}\right)^{2} & E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}\right)^{2} &  & ...\\
+... &  & ... & E\left(x_{k-1}\right)E\left(x_{k}\right)\\
+E\left(x_{1}\right)E\left(x_{nk}\right) & ... & E\left(x_{k-1}\right)E\left(x_{k}\right) & E\left(x_{k}\right)^{2}
+\end{array}\right]+
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left[\begin{array}{cccc}
+E\left(x_{1}^{2}\right)-E\left(x_{1}\right)^{2} & 0 & ... & 0\\
+0 & E\left(x_{2}^{2}\right)-E\left(x_{2}\right)^{2} &  & ...\\
+... &  & ... & 0\\
+0 & ... & 0 & E\left(x_{k}^{2}\right)-E\left(x_{k}\right)^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=\left[\begin{array}{cccc}
+E\left(x_{1}\right)^{2}+E\left(x_{1}^{2}\right)-E\left(x_{1}\right)^{2} & E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}\right)^{2}+E\left(x_{2}^{2}\right)-E\left(x_{2}\right)^{2} &  & ...\\
+... &  & ... & E\left(x_{k-1}\right)E\left(x_{k}\right)\\
+E\left(x_{1}\right)E\left(x_{k}\right) & ... & E\left(x_{k-1}\right)E\left(x_{k}\right) & E\left(x_{k}\right)^{2}+E\left(x_{k}^{2}\right)-E\left(x_{k}\right)^{2}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And finally, we see
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=\left[\begin{array}{cccc}
+E\left(x_{1}^{2}\right) & E\left(x_{1}\right)E\left(x_{2}\right) & ... & E\left(x_{1}\right)E\left(x_{n}\right)\\
+E\left(x_{1}\right)E\left(x_{2}\right) & E\left(x_{2}^{2}\right) &  & ...\\
+... &  & ... & E\left(x_{k-1}\right)E\left(x_{k}\right)\\
+E\left(x_{1}\right)E\left(x_{k}\right) & ... & E\left(x_{k-1}\right)E\left(x_{k}\right) & E\left(x_{k}^{2}\right)
+\end{array}\right]=E\left(xx^{T}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And thus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E[x_{n}x_{m}]=μμ^{T}+I_{nm}Σ
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Question 3
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L_{old}\left(w\right)=\frac{1}{2}\sum_{n}\text{\ensuremath{\left(f\left(x\right)-y_{n}\right)}}^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L_{new}\left(w\right)=\frac{1}{2}\sum_{n}\text{\left(\left(w_{0}+\Sigma_{i}w_{i}\left(x_{i}+\epsilon_{i}\right)\right)-y_{n}\right)}^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+rewriting as f(x), for simplicity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L_{new}\left(w\right)=\frac{1}{2}\sum_{n}\text{\ensuremath{\left(\left(f\left(x\right)+\Sigma_{i}w_{i}\epsilon_{i}\right)-y_{n}\right)}}^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+expanding the quadratic
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L_{new}\left(w\right)=\frac{1}{2}\sum_{n}\text{\left(\text{\ensuremath{f\left(x\right)^{2}+2f\left(x\right)\sum_{i}w_{i}\epsilon_{i}+\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}-2f\left(x\right)y_{n}}}-2y_{n}\left(\sum_{i}w_{i}\epsilon_{i}\right)+y_{n}^{2}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we can re-arrange the terms to pull out our old loss function
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L_{new}\left(w\right)=\frac{1}{2}\sum_{n}\left(\text{\ensuremath{\left(f\left(x\right)^{2}-2f\left(x\right)y_{n}+y_{n}^{2}\right)+2f\left(x\right)\sum_{i}w_{i}\epsilon_{i}+\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}}}-2y_{n}\left(\sum_{i}w_{i}\epsilon_{i}\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+rewriting with the old Loss function, we still have a number of terms that
+ include f(x).
+ All of our noise terms also include w.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L_{new}\left(w\right)=L_{old}\left(w\right)+\frac{1}{2}\sum_{n}\left(2f\left(x\right)\sum_{i}w_{i}\epsilon_{i}+\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}-2y_{n}\left(\sum_{i}w_{i}\epsilon_{i}\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, we can can take the expected value of both side of the equation.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\text{\left(L_{new}\left(w\right)\right)}=E\left(L_{old}\left(w\right)\right)+E\left(\frac{1}{2}\sum_{n}\left(2f\left(x\right)\sum_{i}w_{i}\epsilon_{i}+\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}-2y_{n}\left(\sum_{i}w_{i}\epsilon_{i}\right)\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=E\left(L_{old}\left(w\right)\right)+\frac{1}{2}\sum_{n}\left(2f\left(x\right)E\text{\left(\sum_{i}w_{i}\epsilon_{i}\right)}+E\left(\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}\right)-2y_{n}E\left(\sum_{i}w_{i}\epsilon_{i}\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We know that 
+\begin_inset Formula $E\left(\epsilon_{i}\right)=0$
+\end_inset
+
+, which eliminates several terms.
+ However, we must also calculate 
+\begin_inset Formula $E\left(\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}\right)$
+\end_inset
+
+.
+ From algebra, we know this can be broken out into two summations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}=\sum_{i}\left(w_{i}\epsilon_{i}\right)^{2}+\sum_{j}\sum_{i\neq j}w_{i}\epsilon_{i}w_{j}\epsilon_{j}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, we can take the expected value of both sides.
+ Note, the expected value does not depend on w, so we can just take the
+ expected value of the epsilon noise terms.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}\right)=E\text{\left(\sum_{i}\left(w_{i}\epsilon_{i}\right)^{2}\right)}+E\left(2\sum_{j}\sum_{i\neq j}w_{i}\epsilon_{i}w_{j}\epsilon_{j}\right)=\sum_{i}w_{i}^{2}E\left(\epsilon_{i}^{2}\right)+\sum_{j}\sum_{i\neq j}w_{i}w_{j}E\left(\epsilon_{i}\epsilon_{j}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From our definitions of gaussian noise:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}\right)=\sum_{i}w_{i}^{2}\sigma^{2}+2\sum_{j}\sum_{i\neq j}w_{i}w_{j}\sigma^{2}=\sigma^{2}\left(\sum_{i}w_{i}^{2}+\sum_{j}\sum_{i\neq j}w_{i}w_{j}\right)=\sigma^{2}\text{\left(\sum_{j}\sum_{i}w_{i}w_{j}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, we can plug these results back into our expected value formula.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\text{\left(L_{new}\left(w\right)\right)}=E\left(L_{old}\left(w\right)\right)+\frac{1}{2}\sum_{n}\left(\cancelto{0}{2f\left(x\right)E\text{\left(\sum_{i}w_{i}\epsilon_{i}\right)}}+E\left(\left(\sum_{i}w_{i}\epsilon_{i}\right)^{2}\right)-\cancelto{0}{2y_{n}E\left(\sum_{i}w_{i}\epsilon_{i}\right)}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=E\left(L_{old}\left(w\right)\right)+\frac{1}{2}\sum_{n}\left(\sigma^{2}\text{\left(\sum_{j}\sum_{i}w_{i}w_{j}\right)}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, there are no terms in our summatation dependent on n, we we can simplify.
+ Additionally, we know that the expected value of our 
+\begin_inset Formula $L_{old}$
+\end_inset
+
+ function is, by definition, the average.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\text{\left(L_{new}\left(w\right)\right)}=\frac{L_{old}\left(w\right)}{N}+\frac{N\text{\sigma^{2}}}{2}\text{\left(\sum_{j}\sum_{i}w_{i}w_{j}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, we can see that the expected value of our new Loss function is equal
+ to the average (or expecte value of) the old loss function, added to a
+ new 'regularization' term.
+ 
+\emph on
+\bar under
+Note:
+\bar default
+ 
+\emph default
+Professor, you mentioned there should not be an 'N' factor in the second
+ term.
+ However, according to my maths above, I do not see a way to get rid of
+ this N factor.
+\end_layout
+
+\end_body
+\end_document

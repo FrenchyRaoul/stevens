@@ -1,0 +1,200 @@
+#comments {
+    width: 500px;
+}
+
+#navbar {
+    height: 30px;
+    background-color: darkgray;
+    border-radius: 30px;
+    border-top: solid silver;
+    border-left: solid silver;
+    text-align: right;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.nav_item {
+    background-color: aquamarine;
+    border-bottom: solid black;
+    border-right: solid black;
+    border-radius: 20px;
+    float: right;
+    /* top right bottom left */
+    padding: 3px 15px 3px 15px;
+    margin: 0 15px 0 0;
+}
+
+.center_box {
+    margin: auto;
+    width: 45%;
+    border: solid goldenrod;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+dt::after {
+    content: ":";
+}
+
+dd {
+    margin: 0;
+    padding: 0 0 12pt 0;
+}
+
+.comment {
+    margin-top: 20px;
+    width: 100%;
+    border: solid goldenrod;
+}
+
+.comment-rating {
+    height: 20px;
+    color: gold;
+    -webkit-text-stroke: 1px black;
+    padding-top: 2px;
+    padding-left: 10px;
+}
+
+.comment-author {
+    padding-top: 2px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.comment-body {
+    border: 1px solid darkgrey;
+    padding: 10px;
+    margin: 10px 10px 10px 10px;
+    width: auto;
+    text-align: left;
+    font-family: "Times New Roman", serif;
+}
+
+.comment textarea {
+    width: 90%;
+    height: 90px;
+    text-align: left;
+    font-size: 10pt;
+}
+
+body {
+    background-color: cornsilk;
+}
+
+.login-div {
+    background-color: khaki;
+    margin: 0 auto;
+    height: 250px;
+    width: 600px;
+    border-bottom: solid darkkhaki;
+    border-right: solid darkkhaki;
+
+    text-align: center;
+    font-size: 14pt;
+}
+
+.form-message {
+    color: red;
+}
+
+#login-form {
+    padding-top: 3px;
+}
+
+.login-div .input-field {
+    padding: 3px;
+}
+
+.login-dev .input-field label {
+    display: inline-block;
+    width: 0;
+    text-align: right;
+}
+
+.login-div input[type=text], input[type=password] {
+    width: 45%;
+    height: 20px;
+    text-align: center;
+    font-family: "Comic Sans MS", serif;
+    font-size: 12pt;
+}
+
+.login-div input[type=submit] {
+    width: 20%;
+    height: 25px;
+    background-color: azure;
+    border-bottom: solid darkkhaki;
+    border-right: solid darkkhaki;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+.login-div input[type="submit"]:hover {
+    background-color: #e0e0e0;
+}
+
+.not-implemented {
+    pointer-events: none;
+    cursor: default;
+    color: darkgrey;
+}
+
+.not-implemented:after {
+    content: ' (not yet implemented)'
+}
+
+#drinkPic {
+    width: 400px;
+    height: auto;
+}
+
+.rating-disabled,
+.rating {
+    float: left;
+    height: 30px;
+}
+
+.rating input[type=radio]:checked ~ label:after {
+    content: "\2605";
+}
+
+.rating-disabled input[type=radio],
+.rating input[type=radio] {
+    display: none;
+}
+
+.rating-disabled input[type=radio]:first-child + label,
+.rating input[type=radio]:first-child + label {
+    padding-right: 0;
+}
+
+.rating label:after {
+    content: "\2606";
+}
+
+.rating-disabled label:after,
+.rating label:after {
+    content: "\2606";
+    float: right;
+    transition: all 0.25s;
+}
+
+.rating label:hover:after,
+.rating label:hover ~ label:after {
+    content: "\2605" !important;
+}
+
+.comment input[type=submit] {
+    align-content: center;
+    width: 40%;
+    height: 25px;
+    background-color: azure;
+    border-bottom: solid darkkhaki;
+    border-right: solid darkkhaki;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+#newComment input[type="submit"]:hover {
+    background-color: #e0e0e0;
+}

@@ -1,0 +1,18 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>People Searcher</title>
+  <meta name="description" content="People Search Engine">
+  <meta name="author" content="Nicholai L'Esperance">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+    <h1>People Searcher</h1>
+</body>
+</html>

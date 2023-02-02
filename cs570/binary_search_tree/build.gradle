@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'binary_search_tree'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+apply plugin: 'java'
+
+apply plugin: 'application'
+
+mainClassName = 'SortedSet'
+
+run{
+    standardInput = System.in
+}

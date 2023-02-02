@@ -1,0 +1,66 @@
+body {
+    background-color: cornsilk;
+}
+
+.login-div {
+    background-color: khaki;
+    margin: 0 auto;
+    height: 250px;
+    width: 600px;
+    border-bottom: solid darkkhaki;
+    border-right: solid darkkhaki;
+
+    text-align: center;
+    font-size: 14pt;
+}
+
+.login-response {
+    height: 20px;
+    color: red;
+}
+
+#login-form {
+    padding-top: 3px;
+}
+
+.input-field {
+    padding: 3px;
+}
+
+.input-field label {
+    display: inline-block;
+    width: 0;
+    text-align: right;
+}
+
+input[type=text], input[type=password] {
+    width: 45%;
+    height: 20px;
+    text-align: center;
+    font-family: "Comic Sans MS", serif;
+    font-size: 12pt;
+}
+
+input[type=submit] {
+    width: 20%;
+    height: 25px;
+    background-color: azure;
+    border-bottom: solid darkkhaki;
+    border-right: solid darkkhaki;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+input[type="submit"]:hover {
+    background-color: #e0e0e0;
+}
+
+.not-implemented {
+    pointer-events: none;
+    cursor: default;
+    color: darkgrey;
+}
+
+.not-implemented:after {
+    content: ' (not yet implemented)'
+}

@@ -1,0 +1,15 @@
+{
+  "name": "cs546-lab4",
+  "version": "1.0.0",
+  "description": "CS546 Lab 4: Social Media",
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^3.2.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Nicholai L'Esperance 10443833",
+  "license": "ISC"
+}

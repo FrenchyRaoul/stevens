@@ -1,0 +1,15 @@
+const about = require("./animals");
+const story = require("./posts");
+// const edu   = require("./education");
+
+const constructorMethod = app => {
+  app.use("/animals", animals);
+  app.use("/posts", posts);
+  // app.use("/education", edu);
+    
+  app.use("*", (req, res) => {
+      res.status(404).json({ error: "Not found" }); 
+  }); 
+};
+
+module.exports = constructorMethod;

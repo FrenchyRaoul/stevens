@@ -1,0 +1,89 @@
+const collections = require("./collections");
+const animals = collections.animals;
+const ObjectId = require('mongodb').ObjectID;
+
+async function create(name, animalType) {
+    if (!(typeof(name) === 'string')) throw "name must be a string";
+    if (!(typeof(animalType) === 'string')) throw "type must be a string";
+
+    if (!name || !animalType) throw "name and type cannot be empty strings";
+
+    const animal_collection = await animals();
+
+    const animal = {
+        name: name,
+        animalType: animalType
+    };
+
+    const insert = await animal_collection.insertOne(animal);
+    if (insert.insertedCount === 0) throw "could not add animal";
+
+    const id = insert.insertedId;
+    return await get(id.toString());
+}
+
+async function getAll() {
+    const animal_collection = await animals();
+    return await animal_collection.find({}).toArray();
+}
+
+async function get(id) {
+    if (!id) throw "id must be defined"
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+
+    const id_obj = ObjectId(id);
+    const animal_collection = await animals();
+
+    const result = await animal_collection.findOne({ _id: id_obj});
+    if (!result) throw "no animal found with that id";
+
+    return result
+}
+
+async function remove(id) {
+    const animal_collection = await animals();
+    if (!id) throw "parameter id must be defined";
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+
+    const data = await get(id);
+
+    const id_obj = ObjectId(id);
+    const deleted = await animal_collection.deleteOne({ _id: id_obj });
+
+    if (deleted.deletedCount === 0) throw `unable to delete animal with id ${id}`;
+
+    return {
+        deleted: true,
+        data: {
+            _id: id,
+            name: data.name,
+            animalType: data.animalType
+        }
+    }
+}
+
+async function rename(id, newName) {
+    if (!id) throw "parameter id must be defined";
+    if (!newName) throw "parameter newName must be defined";
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+    if (!(typeof(newName) === 'string')) throw "parameter newName must be a string type";
+
+    const animal_collection = await animals();
+    const id_obj = ObjectId(id);
+
+    const update = await animal_collection.updateOne({ _id: id_obj}, { $set: {name: newName}});
+
+    if (update.modifiedCount === 0) {
+        throw "could not update name successfully";
+    }
+
+    return await get(id);
+}
+
+module.exports = {
+    create: create,
+    getAll: getAll,
+    get: get,
+    remove: remove,
+    rename: rename
+};

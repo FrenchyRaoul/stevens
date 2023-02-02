@@ -1,0 +1,11 @@
+{
+  "name": "scratchspace",
+  "version": "1.0.0",
+  "description": "place for js exploration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicholai L'Esperance",
+  "license": "ISC"
+}

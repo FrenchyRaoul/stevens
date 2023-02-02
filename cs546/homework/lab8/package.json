@@ -1,0 +1,16 @@
+{
+  "name": "cs546ws_lab8",
+  "version": "1.0.0",
+  "description": "CS546-WS Lab 8",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Nicholai L'Esperance",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0"
+  }
+}

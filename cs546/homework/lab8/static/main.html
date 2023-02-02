@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>People Finder</title>
+  <meta name="description" content="People Search Engine">
+  <meta name="author" content="Nicholai L'Esperance">
+
+  <link rel="stylesheet" href="/public/site.css">
+
+</head>
+
+<body>
+    <h1>People Finder</h1>
+    <main>
+        <p>This site is used to search for people. The people are all members of a sample dataset previously explored.</p>
+        <form method="POST" action="/search" id="searchForm" enctype="application/x-www-form-urlencoded">
+            <label for="personName">Name to Search</label><br>
+            <input type="text" name="personName" id="personName"/>
+            <button type="submit" id="submit">Submit</button>
+        </form>
+    </main>
+</body>
+</html>

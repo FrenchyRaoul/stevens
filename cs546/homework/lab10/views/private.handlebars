@@ -1,0 +1,34 @@
+<main id="user-page">
+    <div class="user-div">
+        <h1>User Information</h1>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <th>{{user._id}}</th>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <th>{{user.username}}</th>
+            </tr>
+            <tr>
+                <th>First Name</th>
+                <th>{{user.firstName}}</th>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <th>{{user.lastName}}</th>
+            </tr>
+            <tr>
+                <th>Profession</th>
+                <th>{{user.profession}}</th>
+            </tr>
+        </table>
+        <h2>Bio:</h2>
+        <p>{{user.bio}}</p>
+    </div>
+    <a href="/logout">Sign Out</a>
+</main>

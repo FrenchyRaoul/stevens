@@ -1,0 +1,20 @@
+<main id="login-page">
+    <div class="login-div">
+        <form id="login-form" method="POST" action="/login">
+            <h1>Sign in to continue...</h1>
+            <div class="form-response">
+                <span class="form-message">{{error}}</span>
+            </div>
+            <div class="input-field">
+                <label for="username"></label>
+                <input type="text" name="username" id="username" placeholder="username"/><br/>
+            </div>
+            <div class="input-field">
+                <label for="password"></label>
+                <input type="password" name="password" id="password" placeholder="password"/><br/>
+            </div>
+            <input type="submit" value="Sign In"/>
+        </form><br/>
+        New user? <a href="/u/create">Create a new account.</a>
+    </div>
+</main>

@@ -1,0 +1,48 @@
+<main id="user-page">
+    <div id="user-div" class="center_box">
+        <h1>User Information</h1>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <th>{{user.username}}</th>
+            </tr>
+            <tr>
+                <th>First Name</th>
+                <th>{{user.firstName}}</th>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <th>{{user.lastName}}</th>
+            </tr>
+        </table>
+    </div>
+    <div id="drink-div" class="center_box">
+        <h2>Drinks List!</h2>
+        <h3>Drinks you can make with your current stock:</h3>
+        {{#unless (lookup recipes "0")}}
+            None- you need to go shopping!
+        {{/unless}}
+        {{#each (lookup recipes "0")}}
+            <a href="/r/{{this._id}}">{{this.name}}</a><br>
+        {{/each}}
+        <h3>Drinks you can make with one extra ingredient!:</h3>
+        {{#each (lookup recipes "1")}}
+            <a href="/r/{{this._id}}">{{this.name}}</a><br>
+        {{/each}}
+        {{#if (lookup recipes "2")}}
+            <h3>Drinks you can make with two extra ingredients!:</h3>
+            {{#each (lookup recipes "2")}}
+                <a href="/r/{{this._id}}">{{this.name}}</a><br>
+            {{/each}}
+        {{/if}}
+    </div>
+    <div id="ingredient-div" class="center_box">
+        <h2>Update Personal Inventory:</h2>
+        {{> ingredient_form this}}
+    </div>
+</main>
+

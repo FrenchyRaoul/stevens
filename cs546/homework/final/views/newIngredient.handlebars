@@ -1,0 +1,36 @@
+<main id="new_ingredient">
+    <div id="new-ingredient" class="center_box">
+        <form id="ingredient-form" method="POST" action="/i" onsubmit="return newIngredient()">
+            <h1>Create a new ingredient:</h1>
+            <div class="input-field">
+                <label for="ingredient_name">Ingredient Name</label><br/>
+                <input type="text" name="ingredient_name" id="ingredient_name" placeholder="Ingredient Name"/><br/>
+                <span id="name-error" class="form-message">{{name-error}}</span><br/>
+            </div>
+            <div class="input-field">
+                <label for="type">Ingredient "Type":</label><br/>
+                <select name="type" id="type">
+                    <option value="Liquor">Liquor</option>
+                    <option value="Wine">Wine</option>
+                    <option value="Beer">Beer</option>
+                    <option value="Mixer/Juice">Mixer/Juice</option>
+                    <option value="Produce">Produce</option>
+                    <option value="Spice/Seasoning">Spice/Seasoning</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Water">Water</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="input-field">
+                <label for="categories">Categories (Space Separated)<br/>Example: <strong>Whiskey Bourbon Wheated</strong></label><br/>
+                <input type="text" name="categories" id="categories"/><br/>
+            </div>
+            <div class="input-field">
+                <label for="abv">ABV (Integer)</label><br/>
+                <input type="number" name="abv" id="abv"/><br/>
+            </div>
+            <input type="submit" value="Create Ingredient!"/>
+        </form><br/>
+    </div>
+    <script src="/public/scripts/newIngredient.js"></script>
+</main>

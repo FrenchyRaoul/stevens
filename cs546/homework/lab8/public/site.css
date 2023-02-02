@@ -1,0 +1,71 @@
+* {
+    font-family: "Courier New", Times, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+#people {
+    text-align: left;
+    text-decoration: underline;
+}
+
+h2 strong {
+    font-weight: bold;
+    color: green;
+}
+
+p {
+    font-size: 16pt;
+}
+
+p.not-found {
+    font-weight: bold;
+    color: red;
+}
+
+body {
+    background-color: aliceblue;
+}
+
+label {
+    color: blue;
+    font-weight: bold;
+    text-align: center;
+}
+
+input[type=text] {
+    width: 75%;
+    padding: 10px 10px;
+    border: 2px solid green;
+}
+
+button {
+    width: 50pt;
+    border: 3px solid blue;
+    padding: 10px 10px;
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: square;
+}
+
+dl {
+    padding: 30px;
+}
+
+dt {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+dt::after {
+    content: ":";
+}
+
+dd {
+    margin: 0;
+    padding: 0 0 12pt 0;
+}

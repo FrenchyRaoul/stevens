@@ -1,0 +1,14 @@
+{
+  "name": "nicholai_lesperance_cs546_lab6",
+  "version": "1.0.0",
+  "description": "lab6_express_server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Nicholai L'Esperance",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

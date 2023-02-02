@@ -1,0 +1,30 @@
+<main id="new_user">
+    <div id="new-user-div" class="center_box">
+        <form id="user-form" method="POST" name='newuser' action="" onsubmit="return newUser()">
+            <h1>Create a new user:</h1>
+            <div class="input-field">
+                <label for="username">Username</label><br/>
+                <input type="text" name="username" id="username" placeholder="Username"/>
+                <span id="username-error" class="form-message">{{username-error}}</span><br/>
+            </div>
+            <div class="input-field">
+                <label for="firstName">First Name</label><br/>
+                <input type="text" name="firstName" id="firstName" placeholder="First Name"/>
+                <span id="firstname-error" class="form-message"></span><br/>
+            </div>
+            <div class="input-field">
+                <label for="lastName">Last Name</label><br/>
+                <input type="text" name="lastName" id="lastName" placeholder="Last Name"/>
+                <span id="lastname-error" class="form-message"></span><br/>
+            </div>
+            <div class="input-field">
+                <label for="password">Password</label><br/>
+                <input type="password" name="password" id="password" placeholder="Password"/>
+                <span id="password-error" class="form-message"></span><br/>
+            </div>
+            <input type="submit" value="Create User!"/>
+        </form><br/>
+    </div>
+
+    <script type="text/javascript" src="/public/scripts/newUser.js"></script>
+</main>

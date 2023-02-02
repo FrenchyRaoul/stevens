@@ -1,0 +1,18 @@
+{
+  "name": "cs_546_ws_final",
+  "version": "1.0.0",
+  "description": "Final project, cocktail website",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Nicholai Lesperance",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.16.2",
+    "mongodb": "^3.3.0-beta2"
+  }
+}

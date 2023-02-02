@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+
+// Apply the application plugin to add support for building an application
+apply plugin: 'application'
+
+// Define the main class for the application
+mainClassName = 'Huffman'
+
+run{
+    standardInput = System.in
+}
+

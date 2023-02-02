@@ -1,0 +1,14 @@
+<h1>People Found</h1>
+<main>
+    <h2>You searched for: <strong>{{personName}}</strong></h2>
+    <section>
+        <h3 id="people">People</h3>
+        <ul>
+        {{#each people}}
+            <li>
+                <a href="/details/{{id}}">{{firstName}} {{lastName}}</a>
+            </li>
+        {{/each}}
+        </ul>
+    </section>
+</main>

@@ -1,0 +1,11 @@
+{
+  "name": "cs_546_ws_final",
+  "version": "1.0.0",
+  "description": "Final project, cocktail website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicholai Lesperance",
+  "license": "ISC"
+}

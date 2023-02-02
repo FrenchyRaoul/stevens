@@ -1,0 +1,7 @@
+<form id="ingredients" action="/u/{{this.user._id}}/inventory" method="POST">
+    {{#each ingredients}}
+        <label for="{{this.clean_name}}"></label>
+        <input type="checkbox" name="inventory" id="{{this.clean_name}}" value="{{this._id}}"{{#if this.checked}} checked{{/if}}>{{this.name}}<br/>
+    {{/each}}
+    <input type="submit" value="Update Inventory">
+</form>

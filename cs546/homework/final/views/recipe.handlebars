@@ -1,0 +1,34 @@
+<div id="recipe" class="center_box">
+    <h1>{{recipe.name}}</h1>
+    {{{getStars recipe.rating}}}<br>
+    ({{recipe.reviews}} reviews)<br/>
+    <img id="drinkPic" src="/public/data/{{recipe.pic}}" alt="picture of {{recipe.name}}">
+    <div id="ingredients">
+        <h2>Ingredients:</h2>
+        <ul>
+            {{#each ingredients}}
+                <li>{{this.quantity}} <a href="/i/{{this._id}}">{{this.name}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+    <div id="steps">
+        <h2>Steps:</h2>
+        <ol>
+        {{#each recipe.steps}}
+            <li>{{this}}</li>
+        {{/each}}
+        </ol>
+    </div>
+    <div id="comments">
+        <h2>Comments:</h2>
+        {{#if user.username}}
+            {{> newcomment this}}
+        {{else}}
+            {{> disabledcomment this}}
+        {{/if}}
+
+        {{#each comments}}
+            {{> comment body=this.body username=this.username}}
+        {{/each}}
+    </div>
+</div>

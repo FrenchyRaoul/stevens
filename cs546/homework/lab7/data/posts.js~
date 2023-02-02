@@ -1,0 +1,102 @@
+const collections = require("./collections");
+const posts = collections.posts;
+const ObjectId = require('mongodb').ObjectID;
+
+async function create(title, author, content) {
+    if (!(typeof(title) === 'string')) throw "name must be a string";
+    if (!(typeof(author) === 'string')) throw "type must be a string";
+    if (!(typeof(content) === 'string')) throw "type must be a string";
+
+    if (!title || !author || !content) throw "name and type cannot be empty strings";
+
+    const post_collection = await posts();
+
+    const post = {
+        title: title,
+        author: author,
+        content: content
+    };
+
+    const insert = await post_collection.insertOne(post);
+    if (insert.insertedCount === 0) throw "could not add post";
+
+    const id = insert.insertedId;
+    return await get(id.toString());
+}
+
+async function getAll() {
+    const post_collection = await posts();
+    return await post_collection.find({}).toArray();
+}
+
+async function get(id) {
+    if (!id) throw "id must be defined"
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+
+    const id_obj = ObjectId(id);
+    const post_collection = await posts();
+
+    const result = await post_collection.findOne({ _id: id_obj});
+    if (!result) throw "no post found with that id";
+
+    return result
+}
+
+async function get_posts_by_user(userid) {
+    if (!id) throw "id must be defined"
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+
+    const id_obj = ObjectId(id);
+    const post_collection = await posts();
+
+    return await post_collection.find({author: id_obj}).toArray();
+}
+
+async function remove(id) {
+    const post_collection = await posts();
+    if (!id) throw "parameter id must be defined";
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+
+    const data = await get(id);
+
+    const id_obj = ObjectId(id);
+    const deleted = await post_collection.deleteOne({ _id: id_obj });
+
+    if (deleted.deletedCount === 0) throw `unable to delete post with id ${id}`;
+
+    return {
+        deleted: true,
+        data: {
+            _id: id,
+            title: data.title,
+            postType: data.postType
+        }
+    }
+}
+
+async function change_title(id, newTitle) {
+    if (!id) throw "parameter id must be defined";
+    if (!newTitle) throw "parameter newTitle must be defined";
+    if (!(typeof(id) === 'string')) throw "parameter id must be a string type";
+    if (!(typeof(newTitle) === 'string')) throw "parameter newTitle must be a string type";
+
+    const post_collection = await posts();
+    const id_obj = ObjectId(id);
+
+    const update = await post_collection.updateOne({ _id: id_obj}, { $set: {title: newTitle}});
+
+    if (update.modifiedCount === 0) {
+        throw "could not update title successfully";
+    }
+
+    return await get(id);
+}
+
+module.exports = {
+    create: create,
+    getAll: getAll,
+    get: get,
+    get_posts_by_user: get_posts_by_user,
+    remove: remove,
+    change_title: rename,
+};

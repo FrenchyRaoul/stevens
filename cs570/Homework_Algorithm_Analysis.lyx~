@@ -1,0 +1,1096 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "palatino" "default"
+\font_sans "helvet" "default"
+\font_typewriter "courier" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 95 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5in
+\topmargin 0.5in
+\rightmargin 0.5in
+\bottommargin 0.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Analysis of Algorithms
+\end_layout
+
+\begin_layout Author
+Nicholai L'Esperance
+\end_layout
+
+\begin_layout Enumerate
+Show that the following statements are true:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Formula $\frac{n\left(n-1\right)}{2}$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(n^{2}\right)$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To solve this, we must prove there exists constants c, 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ such that 
+\begin_inset Formula $f\left(n\right)\leqq cg\left(n\right)\,\forall\,n\geqq n_{0}$
+\end_inset
+
+.
+ To do this, we can pick c, and solve for 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+.
+ Picking c=1
+\begin_inset Formula 
+\[
+\frac{n\left(n-1\right)}{2}\leqq n^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{n^{2}}{2}-\frac{n}{2}\leqq n^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{1}{2}-\frac{1}{2n}\leqq1
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+-\frac{1}{2n}\leqq\frac{1}{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+-1\leqq n
+\]
+
+\end_inset
+
+
+\series bold
+\bar under
+So, 
+\begin_inset Formula $\frac{n\left(n-1\right)}{2}$
+\end_inset
+
+ is in 
+\begin_inset Formula $O\left(n^{2}\right)$
+\end_inset
+
+, which we prove with the existance of 
+\begin_inset Formula $c=1,\,n_{0}=-1$
+\end_inset
+
+ satisfying the definition given above.
+
+\series default
+\bar default
+ Note: n must be greater than 1, by definition, but that still satisfies
+ the condition.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $max\left(n^{3},10n^{2}\right)$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(n^{3}\right)$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To solve this, it is proven that both of the individual functions are in
+ 
+\begin_inset Formula $O\left(n^{3}\right)$
+\end_inset
+
+, and therefore the maximum of the two must also be in 
+\begin_inset Formula $O\left(n^{3}\right)$
+\end_inset
+
+.
+ First, 
+\begin_inset Formula $f\left(n\right)=n^{3}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+f\left(n\right)\leqq cg\left(n\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+n^{3}\leqq cn^{3}
+\]
+
+\end_inset
+
+Picking c =1, we can solve for 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+n^{3}\leqq n^{3}\,\therefore n^{3}∈O\left(n^{3}\right),c=1,n_{0}\,is\,arbitrary
+\]
+
+\end_inset
+
+Next, we examine
+\begin_inset Formula $f\left(n\right)=10n^{2}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+f\left(n\right)\leqq cg\left(n\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+10n^{2}\leqq cn^{3}
+\]
+
+\end_inset
+
+Picking c=1:
+\begin_inset Formula 
+\[
+10n^{2}\leqq n^{3}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+10\leqq n
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\therefore10n^{2}\text{∈}O\left(n^{3}\right),c=1,n_{0}=10
+\]
+
+\end_inset
+
+
+\series bold
+\bar under
+Now, we can put this together for the final solution.
+\bar default
+
+\begin_inset Formula 
+\[
+max\left(n^{3},10n^{2}\right)\text{∈}O\left(n^{3}\right),c=1,n_{0}=10
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\sum_{i=1}^{n}i^{k}$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(n^{k+1}\right)$
+\end_inset
+
+ for integer k.
+\begin_inset Newline newline
+\end_inset
+
+First, we can note the this summation is less than a very similar summation.
+\begin_inset Formula 
+\[
+\sum_{i=1}^{n}i^{k}\leqq\sum_{i=1}^{n}n^{k}=nn^{k}=n^{k+1}
+\]
+
+\end_inset
+
+Now, if we can show that 
+\begin_inset Formula $n^{k+1}$
+\end_inset
+
+ is in 
+\begin_inset Formula $O\left(n^{k+1}\right)$
+\end_inset
+
+, we then also know
+\begin_inset Formula $\sum_{i=1}^{n}i^{k}$
+\end_inset
+
+ is in 
+\begin_inset Formula $O\left(n^{k+1}\right)$
+\end_inset
+
+, as we have shown that 
+\begin_inset Formula $\sum_{i=1}^{n}i^{k}\leqq n^{k+1}$
+\end_inset
+
+.
+ Setting 
+\begin_inset Formula $f\left(n\right)=n^{k+1}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\sum_{i=1}^{n}i^{k}\leqq f\left(n\right),\,\,f\left(n\right)\leqq cg\left(n\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+n^{k+1}\leqq cn^{k+1}
+\]
+
+\end_inset
+
+Setting c = 1, we can see
+\begin_inset Formula 
+\[
+\sum_{i=1}^{n}i^{k}\leqq n^{k+1}\leqq n^{k+1}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\sum_{i=1}^{n}i^{k}\text{∈}O\left(n^{k+1}\right),\,c=1,n_{0}\,is\,arbitrary.
+\]
+
+\end_inset
+
+
+\series bold
+\bar under
+Thus, given the existance of a constant c and 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ we have proven the summation lies within 
+\begin_inset Formula $O\left(n^{k+1}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+If P(x) is any 
+\begin_inset Formula $k^{th}$
+\end_inset
+
+ degree polynomail with a positive leading coefficient, then p(n) is 
+\begin_inset Formula $O\left(n^{k}\right)$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+First, let us define our polynomial.
+\begin_inset Formula 
+\[
+p\left(n\right)=a_{n}n^{k}+a_{n-1}n^{k-1}+a_{n-2}n^{k-2}+\ldots+a_{1}n+a_{0}
+\]
+
+\end_inset
+
+To solve this, we can show that a larger funcion falls within order 
+\begin_inset Formula $O\left(n^{k}\right)$
+\end_inset
+
+.
+ First, we can divide out 
+\begin_inset Formula $n^{k}$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+p\left(n\right)=n^{k}\left(a_{n}+\frac{a_{n-1}}{n}+\frac{a_{n-2}}{n^{2}}+\ldots+\frac{a_{1}}{n^{k-1}}+\frac{a_{0}}{n^{k}}\right)
+\]
+
+\end_inset
+
+Because some of the coefficients could be negative, we can take the absolute
+ value of each, guaranteeing we are either increasing the value of the function,
+ or making no change at all.
+\begin_inset Formula 
+\[
+p\left(n\right)=n^{k}\left(a_{n}+\frac{a_{n-1}}{n}+\frac{a_{n-2}}{n^{2}}+\ldots+\frac{a_{1}}{n^{k-1}}+\frac{a_{0}}{n^{k}}\right)\leqq n^{k}\left(\left|a_{n}\right|+\left|\frac{a_{n-1}}{n}\right|+\left|\frac{a_{n-2}}{n^{2}}\right|+\ldots+\left|\frac{a_{1}}{n^{k-1}}\right|+\left|\frac{a_{0}}{n^{k}}\right|\right)
+\]
+
+\end_inset
+
+We again again note, that this function is also less than or equal to a
+ similar function without n terms in the denominators.
+\begin_inset Formula 
+\[
+p\left(n\right)\leqq n^{k}\left(\left|a_{n}\right|+\left|\frac{a_{n-1}}{n}\right|+\left|\frac{a_{n-2}}{n^{2}}\right|+\ldots+\left|\frac{a_{1}}{n^{k-1}}\right|+\left|\frac{a_{0}}{n^{k}}\right|\right)\leqq n^{k}\left(\left|a_{n}\right|+\left|a_{n-1}\right|+\left|a_{n-2}\right|+\ldots+\left|a_{1}\right|+\left|a_{0}\right|\right)
+\]
+
+\end_inset
+
+We can now define a new constant that is the sum of all of the coefficients.
+\begin_inset Formula 
+\[
+a=\sum_{i=0}^{n}\left|a_{i}\right|
+\]
+
+\end_inset
+
+Now, we must prove that 
+\begin_inset Formula $p\left(n\right)\leqq cg\left(n\right)\,\forall\,n\geqq n_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $g\left(n\right)=n^{k}$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+p\left(n\right)\leqq n^{k}a\leqq cn^{k}
+\]
+
+\end_inset
+
+We can choose a value of c=a.
+\begin_inset Formula 
+\[
+p\left(n\right)\leqq n^{k}\leqq n^{k}
+\]
+
+\end_inset
+
+This inequality holds true for all values of n.
+ 
+\series bold
+\bar under
+Thus, 
+\begin_inset Formula $p\left(n\right)\text{∈}O\left(n^{k}\right)$
+\end_inset
+
+ as proven by the existance of constants c=a, and 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ arbitrary (where a is defined as the sum of the absolute value of the polynomia
+l coefficients).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Which function grows faster?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Formula $n^{log_{2}\left(n\right)};\,\left(log_{2}\left(n\right)\right)^{n}$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To compare growth rates, given functions f(n) and g(n), determine if the
+ following limit goes to 0 or infinity.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}=\frac{f\left(n\right)}{g\left(n\right)}=\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(n\right)}}{\left(log_{2}\left(n\right)\right)^{n}}
+\]
+
+\end_inset
+
+Taking the base n log of the top and bottom.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(n\right)}}{\left(log_{2}\left(n\right)\right)^{n}}=\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{log_{n}\left(\left(log_{2}\left(n\right)\right)^{n}\right)}
+\]
+
+\end_inset
+
+Using the properties of logs, factor out the exponent in the denominator.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{log_{n}\left(\left(log_{2}\left(n\right)\right)^{n}\right)}=\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{log_{n}\left(\left(log_{2}\left(n\right)\right)\left(log_{2}\left(n\right)\right)\left(log_{2}\left(n\right)\right)\ldots\right)}=\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{log_{n}\left(log_{2}\left(n\right)\right)+log_{n}\left(log_{2}\left(n\right)\right)+\ldots}=\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{nlog_{n}\left(log_{2}\left(n\right)\right)}
+\]
+
+\end_inset
+
+Change the base of the upper logarithm.
+\begin_inset Formula 
+\[
+log_{2}\left(n\right)=\frac{log_{n}\left(n\right)}{log_{n}\left(2\right)}=\frac{1}{log_{n}\left(2\right)}\,\,\therefore\lim_{n\rightarrow\infty}\frac{1}{log_{n}\left(2\right)nlog_{n}\left(log_{2}\left(n\right)\right)}
+\]
+
+\end_inset
+
+All terms in the denominator go to infinity as n goes to infinity, thus
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(n\right)}}{\left(log_{2}\left(n\right)\right)^{n}}=\lim_{n\rightarrow\infty}\frac{1}{log_{n}\left(2\right)nlog_{n}\left(log_{2}\left(n\right)\right)}=0
+\]
+
+\end_inset
+
+Because our limit approaches 0 as n approaches infinity, we know that g(n)
+ grows faster than f(n), or 
+\series bold
+\bar under
+
+\begin_inset Formula $\left(log_{2}\left(n\right)\right)^{n}$
+\end_inset
+
+ grows faster than 
+\begin_inset Formula $n^{log_{2}\left(n\right)}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $log_{2}\left(n^{k}\right);\,\left(log_{2}\left(n\right)\right)^{k}$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To compare growth rates, given functions f(n) and g(n), determine if the
+ following limit goes to 0 or infinity.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}=\frac{f\left(n\right)}{g\left(n\right)}=\lim_{n\rightarrow\infty}\frac{log_{2}\left(n^{k}\right)}{\left(log_{2}\left(n\right)\right)^{k}}=\lim_{n\rightarrow\infty}\frac{klog_{2}\left(n\right)}{\left(log_{2}\left(n\right)\right)\left(log_{2}\left(n\right)\right)\ldots\left(log_{2}\left(n\right)\right)}=\lim_{n\rightarrow\infty}\frac{k}{\left(log_{2}\left(n\right)\right)^{k-1}}
+\]
+
+\end_inset
+
+This limit is then easily evaluated
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{k}{\left(log_{2}\left(n\right)\right)^{k-1}}=k\lim_{n\rightarrow\infty}\frac{1}{\left(log_{2}\left(n\right)\right)^{k-1}}=k\left(0\right)=0
+\]
+
+\end_inset
+
+Because our limit approaches 0 as n approaches infinity, we know that g(n)
+ grows faster than f(n), or 
+\series bold
+\bar under
+
+\begin_inset Formula $\left(log_{2}\left(n\right)\right)^{k}$
+\end_inset
+
+ grows faster than 
+\begin_inset Formula $log_{2}\left(n^{k}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)};\,\left(log_{2}\left(n\right)\right)!$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To compare growth rates, given functions f(n) and g(n), determine if the
+ following limit goes to 0 or infinity.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}=\frac{f\left(n\right)}{g\left(n\right)}=\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)}}{\left(log_{2}\left(n\right)\right)!}
+\]
+
+\end_inset
+
+We note, for all positive values of x, x is greater than the value of 
+\begin_inset Formula $log_{2}\left(x\right)$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+0\leqq log_{2}\left(x\right)<x\,\,\forall\,x>0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\therefore log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)<log_{2}\left(log_{2}\left(n\right)\right)<log_{2}\left(n\right)\,\,\forall\,n>1
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\therefore n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)}<n^{log_{2}\left(n\right)}\,\,\forall\,n>1
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+0\leqq\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)}}{\left(log_{2}\left(n\right)\right)!}<\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(n\right)}}{\left(log_{2}\left(n\right)\right)!}
+\]
+
+\end_inset
+
+Take the base n log of top and bottom.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{log_{n}\left(\left(log_{2}\left(n\right)\right)!\right)}
+\]
+
+\end_inset
+
+Change the base of the top logarithm.
+\begin_inset Formula 
+\[
+log_{2}\left(n\right)=\frac{log_{n}\left(n\right)}{log_{n}\left(2\right)}=\frac{1}{log_{n}\left(2\right)}\,\,\therefore\lim_{n\rightarrow\infty}\frac{log_{2}\left(n\right)}{log_{n}\left(\left(log_{2}\left(n\right)\right)!\right)}=\lim_{n\rightarrow\infty}\frac{1}{log_{n}\left(2\right)log_{n}\left(\left(log_{2}\left(n\right)\right)!\right)}
+\]
+
+\end_inset
+
+All terms in the denominator go to infinity as n goes to infinity.
+ Thus:
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{1}{log_{n}\left(2\right)log_{n}\left(\left(log_{2}\left(n\right)\right)!\right)}=0
+\]
+
+\end_inset
+
+Finally, by the squeeze theorm, we know:
+\begin_inset Formula 
+\[
+0\leqq\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)}}{\left(log_{2}\left(n\right)\right)!}<\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(n\right)}}{\left(log_{2}\left(n\right)\right)!}=0\,\,\therefore\lim_{n\rightarrow\infty}\frac{n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)}}{\left(log_{2}\left(n\right)\right)!}=0
+\]
+
+\end_inset
+
+Because our limit approaches 0 as n approaches infinity, we know that g(n)
+ grows faster than f(n), or 
+\series bold
+\bar under
+
+\begin_inset Formula $\left(log_{2}\left(n\right)\right)!$
+\end_inset
+
+ grows faster than 
+\begin_inset Formula $n^{log_{2}\left(log_{2}\left(log_{2}\left(n\right)\right)\right)}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $n^{n};\,n!$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+To compare growth rates, given functions f(n) and g(n), determine if the
+ following limit goes to 0 or infinity.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}=\frac{f\left(n\right)}{g\left(n\right)}=\lim_{n\rightarrow\infty}\frac{n^{n}}{n!}=\lim_{n\rightarrow\infty}\frac{n\cdotp n\cdotp n\cdotp\ldots\cdotp n}{n\cdotp\left(n-1\right)\cdotp(n-2)\cdotp\ldots\cdotp2\cdotp1}=\lim_{n\rightarrow\infty}\frac{n^{n-1}}{\left(n-1\right)!}
+\]
+
+\end_inset
+
+Looking at the two sequences, it is clear that the denominator is larger
+ than the numerator.
+\begin_inset Formula 
+\[
+\left(n-1\right)!=\prod_{i=1}^{n-1}i
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+n^{n-1}=\prod_{i=1}^{n-1}n
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\prod_{i=1}^{n-1}i\leqq\prod_{i=1}^{n-1}n
+\]
+
+\end_inset
+
+Thus, we can evaluate our limit.
+\begin_inset Formula 
+\[
+\lim_{n\rightarrow\infty}\frac{n^{n}}{n!}=\lim_{n\rightarrow\infty}\frac{n^{n-1}}{\left(n-1\right)!}=\infty
+\]
+
+\end_inset
+
+Becuase our limit approaches infinity, we know that our function f(n) grows
+ faster than g(n), or 
+\series bold
+\bar under
+
+\begin_inset Formula $n^{n}$
+\end_inset
+
+ grows faster than 
+\begin_inset Formula $n!$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+If 
+\begin_inset Formula $f_{1}\left(n\right)$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(g_{1}\left(n\right)\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{2}\left(n\right)$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(g_{2}\left(n\right)\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{2}$
+\end_inset
+
+ are positive functions of n, show that the function 
+\begin_inset Formula $f_{1}\left(n\right)+f_{2}\text{\left(n\right)}$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(max\left(g_{1}\left(n\right),g_{2}\left(n\right)\right)\right)$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+We know the following relations exist.
+\begin_inset Formula 
+\[
+f_{1}\left(n\right)\leqq c_{1}g_{1}\left(n\right)\,\forall n\geqq n_{0_{1}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+f_{2}\left(n\right)\leqq c_{2}g_{2}\left(n\right)\,\forall n\geqq n_{0_{2}}
+\]
+
+\end_inset
+
+We can define a new constant 
+\begin_inset Formula $c_{3}$
+\end_inset
+
+ that is the maximum of 
+\begin_inset Formula $c_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{2}$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+c_{1}g_{1}\left(n\right)+c_{2}g_{2}\left(n\right)\leqq cg_{1}\left(n\right)+cg_{2}\left(n\right)=c_{3}\left(g_{1}\left(n\right)+g_{2}\left(n\right)\right)
+\]
+
+\end_inset
+
+Thus, we know
+\begin_inset Formula 
+\[
+f_{1}\left(n\right)+f_{2}\left(n\right)\leqq c_{1}g_{1}\left(n\right)+c_{2}g_{2}\left(n\right)\leqq c_{3}\left(g_{1}\left(n\right)+g_{2}\left(n\right)\right)\,\forall n\geqq max\left(n_{0_{1}},n_{0_{2}}\right)
+\]
+
+\end_inset
+
+We can then use another inequality to get our max.
+\begin_inset Formula 
+\[
+c\left(g_{1}\left(n\right)+g_{2}\left(n\right)\right)\leqq c_{3}\cdotp2\cdotp max(g_{1}\left(n\right),g_{2}\left(n\right))
+\]
+
+\end_inset
+
+Putting it all together, we can define our 
+\begin_inset Formula $n_{0}=max\left(n_{0_{1}},n_{0_{2}}\right)$
+\end_inset
+
+, and 
+\begin_inset Formula $c=2c_{3}=2max\left(c_{1},c_{2}\right)$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+f_{1}\left(n\right)+f_{2}\left(n\right)\leqq c\cdotp max(g_{1}\left(n\right),g_{2}\left(n\right))\,\forall n\geqq n_{0}
+\]
+
+\end_inset
+
+Thus we know that, given 
+\begin_inset Formula $f_{1}\left(n\right)\text{∈}O\left(g_{1}\left(n\right)\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{2}\left(n\right)\text{∈}O\left(g_{2}\left(n\right)\right)$
+\end_inset
+
+, 
+\series bold
+\bar under
+there exists constants c, and 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ to satisfy our inequality proving 
+\begin_inset Formula $f_{1}\left(n\right)+f_{2}\text{\ensuremath{\left(n\right)}}\text{∈}O\left(max\left(g_{1}\left(n\right),g_{2}\left(n\right)\right)\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Prove or disprove: Any positive n is 
+\begin_inset Formula $O\left(\frac{n}{2}\right)$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+To solve this, we must prove there exists constants c, 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ such that 
+\begin_inset Formula $f\left(n\right)\leqq cg\left(n\right)\,\forall\,n\geqq n_{0}$
+\end_inset
+
+.
+ To prove this in the arbitrary case, we define f(n) = bn, where b is an
+ arbitrary positive constant.
+\begin_inset Formula 
+\[
+f\left(n\right)\leqq cg\left(n\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+bn\leqq c\frac{n}{2}
+\]
+
+\end_inset
+
+We can divide both sides by by, and rearrange.
+\begin_inset Formula 
+\[
+n\leqq\frac{c}{2b}n
+\]
+
+\end_inset
+
+We select 
+\begin_inset Formula $c=\frac{1}{2b}$
+\end_inset
+
+, giving us
+\begin_inset Formula 
+\[
+n\leqq n
+\]
+
+\end_inset
+
+
+\series bold
+\bar under
+Thus, we have proven that every positive funcion 
+\begin_inset Formula $f\left(n\right)=bn$
+\end_inset
+
+, where b is an arbitrary positive constant, exists in 
+\begin_inset Formula $O\left(\frac{n}{2}\right)$
+\end_inset
+
+.
+
+\series default
+\bar default
+ Constant 
+\begin_inset Formula $c=\frac{1}{2b}$
+\end_inset
+
+ and any arbitrary 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ satisfy our defition 
+\begin_inset Formula $f\left(n\right)\leqq cg\left(n\right)\,\forall\,n\geqq n_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Prove or disprove: 
+\begin_inset Formula $3^{n}$
+\end_inset
+
+ is 
+\begin_inset Formula $O\left(2^{n}\right)$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+To solve this, we must prove there exists constants c, 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ such that 
+\begin_inset Formula $f\left(n\right)\leqq cg\left(n\right)\,\forall\,n\geqq n_{0}$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+f\left(n\right)\leqq cg\left(n\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+3^{n}\leqq c2^{n}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{3^{n}}{2^{n}}\leqq c
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(\frac{3}{2}\right)^{n}\leqq c
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+log_{\frac{3}{2}}\left(\left(\frac{3}{2}\right)^{n}\right)\leqq log_{\frac{3}{2}}\left(c\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+n\leqq log_{\frac{3}{2}}\left(c\right)
+\]
+
+\end_inset
+
+In order for function 
+\begin_inset Formula $f\left(n\right)=3^{n}$
+\end_inset
+
+ to exist in 
+\begin_inset Formula $O\left(2^{n}\right)$
+\end_inset
+
+, we must find constants c, 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ that satisfy 
+\begin_inset Formula $f\left(n\right)\leqq cg\left(n\right)\,\forall\,n\geqq n_{0}$
+\end_inset
+
+.
+ However, the only solution to this inequality requires that n be less than
+ 
+\begin_inset Formula $log_{\frac{3}{2}}\left(c\right)$
+\end_inset
+
+.
+ Thus, there exists no c, 
+\begin_inset Formula $n_{0}$
+\end_inset
+
+ that can satisfy the condition, and we can say that 
+\series bold
+\bar under
+
+\begin_inset Formula $3^{n}$
+\end_inset
+
+ is not in 
+\begin_inset Formula $O\left(2^{n}\right)$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,64 @@
+* {
+    background-color: beige;
+    font-family: "Courier New", "Courier", sans-serif;
+}
+
+h1 {
+    font-size: 36pt;
+}
+
+label {
+    font-size: 24pt;
+}
+
+#input-area {
+    background-color: aqua;
+}
+
+.error {
+    color: red;
+    font-size: 20pt;
+    font-weight: bold
+}
+
+.is-prime {
+    color: #00E676;
+    font-weight: bold;
+}
+
+.not-prime {
+    color: #FF3D00;
+    font-weight: bold;
+}
+
+#input-area {
+    border: solid cadetblue;
+    width: 1000px;
+    display: inline-block;
+}
+
+input[type=number] {
+    width: 80%;
+    background-color: #f0e0ef;
+    padding: 0 10px 10px 10px;
+    text-align: center;
+    font-size: 24pt;
+}
+
+input[type=submit] {
+    width: 10%;
+    padding: 20px 20px 20px 20px;
+    border: solid black;
+}
+
+main {
+    text-align: center;
+}
+
+li {
+    list-style-position: inside;
+    text-align: center;
+    font-size: 20pt;
+    margin: 0;
+    padding: 0;
+}

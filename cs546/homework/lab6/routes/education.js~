@@ -1,0 +1,13 @@
+data = [
+    { 
+        "schoolName": "University of Vermont",
+        "degree": "Bachelors of Science",
+        "favoriteClass": "Digital Signal Processing",
+        "favoriteMemory": "Building a 4ft wide quadrotor, that thing was dangerous"
+    }
+]
+
+
+module.exports = function(req, res) {
+    res.send(data);
+};
