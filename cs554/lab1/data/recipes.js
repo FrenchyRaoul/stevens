@@ -52,7 +52,13 @@ async function validateRecipe(recipe) {
 
 async function getRecipe(id) {
     if (id === undefined) throw "recipe id must be defined";
-    const recipe = await (await recipeCollection()).findOne({ _id: ObjectId(id) });
+    let recipe_object = undefined;
+    try {
+        recipe_object = ObjectId(id)
+    } catch (e) {
+        throw `bad object id: ${e}`
+    }
+    const recipe = await (await recipeCollection()).findOne({ _id: recipe_object });
     if (recipe === null) throw `no recipe found for id: ${id}`
     return recipe
 }
@@ -82,9 +88,16 @@ async function validateRecipeUpdate(updateObject) {
 
 async function updateRecipe(id, updateObject) {
     // validation of the update object is handled by the caller function to separate out 404 and 500 statuses
+    let recipe_object = undefined;
+    try {
+        recipe_object = ObjectId(id)
+    } catch (e) {
+        throw `bad object id: ${e}`
+    }
+
     const rCollection = await recipeCollection();
     try {
-        await rCollection.updateOne({ _id: ObjectId(id) }, { $set: updateObject });
+        await rCollection.updateOne({ _id: recipe_object }, { $set: updateObject });
     } catch (e) {
         throw `failed to update recipe: ${e}`
     }
@@ -100,6 +113,14 @@ async function validateComment(comment) {
 async function postComment(recipeId, comment, user) {
     if (recipeId === undefined) throw "recipeId must be defined";
     if (user === undefined) throw "user must be provided";
+
+    let recipe_object = undefined;
+    try {
+        recipe_object = ObjectId(recipeId)
+    } catch (e) {
+        throw `bad object id: ${e}`
+    }
+
     await validateComment(comment);
     const newComment = {
         _id: new ObjectId(),
@@ -110,16 +131,58 @@ async function postComment(recipeId, comment, user) {
         "comment": comment};
     const rCollection = await recipeCollection();
     try {
-        console.log(recipeId);
-        const inserted = await rCollection.updateOne(
-            { _id: ObjectId(recipeId) },
+        await rCollection.updateOne(
+            { _id: recipe_object },
             { $push: { comments: newComment}});
-        console.log(`update results: ${inserted.matchedCount} ${inserted.modifiedCount} ${inserted.upsertedId}`)
     } catch (e) {
         throw `I failed to insert a comment on this recipe: ${e}`
     }
     return await getRecipe(recipeId);
 }
 
+async function getRecipeContainingComment(recipeId, commentId) {
+    if (recipeId === undefined) throw "recipeId must be defined";
+    if (commentId === undefined) throw "commentId must be defined";
+    const rCollection = await recipeCollection();
 
-module.exports = { createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment }
+    let comment_object = undefined;
+    let recipe_object = undefined;
+    try {
+        comment_object = ObjectId(commentId);
+        recipe_object = ObjectId(recipeId)
+    } catch (e) {
+        throw `bad object id: ${e}`
+    }
+    const comment = await rCollection.findOne(
+        { _id: recipe_object, "comments._id": comment_object },
+        "comments.$",
+        );
+    if (comment === null) throw `no comment found for recipeId ${recipeId} commentId ${commentId}`
+    return comment
+}
+
+async function deleteComment(recipeId, commentId) {
+    if (recipeId === undefined) throw "recipeId must be defined";
+    if (commentId === undefined) throw "commentId must be defined";
+    let comment_object = undefined;
+    let recipe_object = undefined;
+    try {
+        comment_object = ObjectId(commentId);
+        recipe_object = ObjectId(recipeId)
+    } catch (e) {
+        throw `bad object id: ${e}`
+    }
+
+    const rCollection = await recipeCollection();
+    const comment = await rCollection.updateOne(
+        { _id: recipe_object, "comments._id": comment_object },
+        { $pull: {comments: {_id: comment_object } } }
+    )
+    if (comment.modifiedCount !== 1) throw `failed to delete recipeId ${recipeId} commentId ${commentId}`
+    return await getRecipe(recipeId)
+}
+
+
+module.exports = {
+    createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment, getRecipeContainingComment,
+    deleteComment }

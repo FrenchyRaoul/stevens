@@ -1,5 +1,8 @@
 // importing the data functions for recipe creation. Perhaps move all of this to data
-const {createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment} = require('../data/recipes');
+const {
+    createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment, getRecipeContainingComment,
+    deleteComment
+} = require('../data/recipes');
 const express = require('express');
 const router = express.Router();
 const {ObjectId} = require('mongodb');
@@ -139,11 +142,51 @@ router.post('/:id/comments', [checkAuthenticated,
     }
 }])
 
-// Middleware #2: Check authentication prior to handling the delete
+// for debug
+router.get('/:recipeId/:commentId', async (req, res) => {
+    const { recipeId, commentId } = req.params;
+    try {
+        const comment = await getRecipeContainingComment(recipeId, commentId);
+        res.json(comment);
+    } catch (e) {
+        res.status(404).json({"error": e})
+    }
+})
+
+// Middleware #2: Check authentication prior to handling delete
 router.delete('/:recipeId/:commentId', [checkAuthenticated,
     async (req, res) => {
     const { recipeId, commentId } = req.params;
-    res.send(`I found a request to delete a comment to: ${recipeId} ${commentId}`)
+    let recipe = undefined;
+    try {
+        recipe = await getRecipeContainingComment(recipeId, commentId);
+    } catch (e) {
+        res.status(404).json({"error": e});
+        return
+    }
+
+    let owner = undefined;
+    for (const comment of recipe.comments) {
+        if (comment._id.toString() === commentId) {
+            owner = comment.userThatPostedComment._id;
+        }
+    }
+    if (owner === undefined) {
+        res.status(500).json({"error": "could not determine user owner of comment"});
+        return
+    }
+
+    if (req.session.user.userId !== owner) {
+        res.status(403).json({"error": "you do not have permission to delete this comment"});
+        return
+    }
+
+    try {
+        const comment = await deleteComment(recipeId, commentId);
+        res.json(comment);
+    } catch (e) {
+        res.status(404).json({"error": e})
+    }
 }])
 
 router.post(':id/likes', async (req, res) => {
