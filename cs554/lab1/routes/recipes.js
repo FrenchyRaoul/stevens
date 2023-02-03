@@ -1,22 +1,48 @@
 // importing the data functions for recipe creation. Perhaps move all of this to data
 const {
     createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment, getRecipeContainingComment,
-    deleteComment
+    deleteComment, likeRecipe
 } = require('../data/recipes');
 const express = require('express');
 const router = express.Router();
-const {ObjectId} = require('mongodb');
-
 
 
 // Middleware #1 *and* #2 (applied to different routes)
 async function checkAuthenticated(req, res, next) {
     if (!req.session.user) {
         res.status(401).json({"error": "you are not currently logged in, this request cannot be completed"});
-    }
-    else {
+    } else {
         next()
     }
+}
+
+
+function isObjectEmpty(object) {
+    return Object.keys(object).length === 0;
+}
+
+function checkArraysEqual(array1, array2) {
+    if (!Array.isArray(array1)) return false;
+    if (!Array.isArray(array2)) return false;
+    if (array1.length !== array2.length) return false;
+    for (let i = 0; i < array1.length; ++i) {
+        if (array1[i] !== array2[i]) return false;
+    }
+    return true;
+}
+
+function createPatchObject(original, update) {
+    let newObject = {};
+    for (let prop in original) {  // iterate over all properties
+        if (original.hasOwnProperty(prop)) {   // ignore "hidden" properties
+            if (update[prop]) {
+                if (Array.isArray(original[prop])) {
+                    if (!checkArraysEqual(original[prop], update[prop])) newObject[prop] = update[prop];
+                } else if (update[prop] !== original[prop]) newObject[prop] = update[prop];
+            }
+        }
+    }
+    return newObject
 }
 
 
@@ -25,8 +51,8 @@ async function checkAuthenticated(req, res, next) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Middleware #1: applied to *all* post, put, and patch in /recipes
-router.post('*',  checkAuthenticated);
-router.put('*',   checkAuthenticated);
+router.post('*', checkAuthenticated);
+router.put('*', checkAuthenticated);
 router.patch('*', checkAuthenticated);
 
 router.get('/', async (req, res) => {
@@ -65,34 +91,6 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-function isObjectEmpty(object) {
-    return Object.keys(object).length === 0;
-}
-
-function checkArraysEqual(array1, array2) {
-    if (!Array.isArray(array1)) return false;
-    if (!Array.isArray(array2)) return false;
-    if (array1.length !== array2.length) return false;
-    for (let i = 0; i < array1.length; ++i) {
-        if (array1[i] !== array2[i]) return false;
-    }
-    return true;
-}
-
-function createPatchObject(original, update) {
-    let newObject = {};
-    for (let prop in original) {  // iterate over all properties
-        if (original.hasOwnProperty(prop)) {   // ignore "hidden" properties
-            if (update[prop]) {
-                if (Array.isArray(original[prop])) {
-                    if (!checkArraysEqual(original[prop], update[prop])) newObject[prop] = update[prop];
-                }
-                else if (update[prop] !== original[prop]) newObject[prop] = update[prop];
-            }
-        }
-    }
-    return newObject
-}
 
 router.patch('/:id', async (req, res) => {
     const reqBody = req.body;
@@ -203,8 +201,20 @@ router.delete('/:recipeId/:commentId', [checkAuthenticated,
     }
 }])
 
-router.post(':id/likes', async (req, res) => {
-    res.send(`user is looking to like recipt ${req.params.id}`)
+router.post('/:id/likes', async (req, res) => {
+    try {
+        await getRecipe(req.params.id);
+    } catch (e) {
+        res.status(404).json({"error": `no recipe found with id ${req.params.id}`});
+        return
+    }
+    const userId = req.session.user.userId;
+    try {
+        const result = await likeRecipe(req.params.id, userId);
+        res.json(result);
+    } catch (e) {
+        res.status(500).json({"error": `failed to like/unlike recipe: ${e}`})
+    }
 })
 
 module.exports = router;

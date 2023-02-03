@@ -10,9 +10,9 @@ async function validateRecipeTitle(title) {
 
 function isIngredientValid(ingredient) {
     return !(                                // note the double negatives, would be better to not have that
-        (typeof ingredient != 'string')  ||  // ingredient must be a string
-        (3 > ingredient.trim().length)   ||  // ingredient must be >3 characters
-        (ingredient.trim().length >= 50))    // ingredient must be <51 characters
+        (typeof ingredient != 'string') ||  // ingredient must be a string
+        (3 > ingredient.trim().length) ||  // ingredient must be >3 characters
+        (ingredient.trim().length >= 50));   // ingredient must be <51 characters
 }
 
 async function validateIngredients(ingredients) {
@@ -25,7 +25,7 @@ async function validateIngredients(ingredients) {
 }
 
 function validateStep(step) {
-    return (typeof step == 'string') && (step.length >= 20)
+    return (typeof step == 'string') && (step.length >= 20);
 }
 
 async function validateSteps(steps) {
@@ -39,7 +39,7 @@ async function validateSteps(steps) {
 
 async function validateCookingSkill(skill) {
     const skills = ["novice", "intermediate", "advanced"];
-    if (!skills.includes(skill.toLocaleLowerCase())) throw `skill level must be \"Novice\", \"Intermediate\", or \"Advanced\". found: ${skill}`
+    if (!skills.includes(skill.toLocaleLowerCase())) throw `skill level must be \"Novice\", \"Intermediate\", or \"Advanced\". found: ${skill}`;
 }
 
 async function validateRecipe(recipe) {
@@ -54,12 +54,12 @@ async function getRecipe(id) {
     if (id === undefined) throw "recipe id must be defined";
     let recipe_object = undefined;
     try {
-        recipe_object = ObjectId(id)
+        recipe_object = ObjectId(id);
     } catch (e) {
-        throw `bad object id: ${e}`
+        throw `bad object id: ${e}`;
     }
     const recipe = await (await recipeCollection()).findOne({ _id: recipe_object });
-    if (recipe === null) throw `no recipe found for id: ${id}`
+    if (recipe === null) throw `no recipe found for id: ${id}`;
     return recipe
 }
 
@@ -90,16 +90,16 @@ async function updateRecipe(id, updateObject) {
     // validation of the update object is handled by the caller function to separate out 404 and 500 statuses
     let recipe_object = undefined;
     try {
-        recipe_object = ObjectId(id)
+        recipe_object = ObjectId(id);
     } catch (e) {
-        throw `bad object id: ${e}`
+        throw `bad object id: ${e}`;
     }
 
     const rCollection = await recipeCollection();
     try {
         await rCollection.updateOne({ _id: recipe_object }, { $set: updateObject });
     } catch (e) {
-        throw `failed to update recipe: ${e}`
+        throw `failed to update recipe: ${e}`;
     }
     return await getRecipe(id);
 }
@@ -116,9 +116,9 @@ async function postComment(recipeId, comment, user) {
 
     let recipe_object = undefined;
     try {
-        recipe_object = ObjectId(recipeId)
+        recipe_object = ObjectId(recipeId);
     } catch (e) {
-        throw `bad object id: ${e}`
+        throw `bad object id: ${e}`;
     }
 
     await validateComment(comment);
@@ -135,7 +135,7 @@ async function postComment(recipeId, comment, user) {
             { _id: recipe_object },
             { $push: { comments: newComment}});
     } catch (e) {
-        throw `I failed to insert a comment on this recipe: ${e}`
+        throw `I failed to insert a comment on this recipe: ${e}`;
     }
     return await getRecipe(recipeId);
 }
@@ -151,13 +151,13 @@ async function getRecipeContainingComment(recipeId, commentId) {
         comment_object = ObjectId(commentId);
         recipe_object = ObjectId(recipeId)
     } catch (e) {
-        throw `bad object id: ${e}`
+        throw `bad object id: ${e}`;
     }
     const comment = await rCollection.findOne(
-        { _id: recipe_object, "comments._id": comment_object },
+        {_id: recipe_object, "comments._id": comment_object},
         "comments.$",
-        );
-    if (comment === null) throw `no comment found for recipeId ${recipeId} commentId ${commentId}`
+    );
+    if (comment === null) throw `no comment found for recipeId ${recipeId} commentId ${commentId}`;
     return comment
 }
 
@@ -168,21 +168,52 @@ async function deleteComment(recipeId, commentId) {
     let recipe_object = undefined;
     try {
         comment_object = ObjectId(commentId);
-        recipe_object = ObjectId(recipeId)
+        recipe_object = ObjectId(recipeId);
     } catch (e) {
-        throw `bad object id: ${e}`
+        throw `bad object id: ${e}`;
     }
 
     const rCollection = await recipeCollection();
     const comment = await rCollection.updateOne(
-        { _id: recipe_object, "comments._id": comment_object },
-        { $pull: {comments: {_id: comment_object } } }
+        {_id: recipe_object, "comments._id": comment_object},
+        {$pull: {comments: {_id: comment_object}}}
     )
-    if (comment.modifiedCount !== 1) throw `failed to delete recipeId ${recipeId} commentId ${commentId}`
+    if (comment.modifiedCount !== 1) throw `failed to delete recipeId ${recipeId} commentId ${commentId}`;
     return await getRecipe(recipeId)
+}
+
+async function likeRecipe(recipeId, userId) {
+    if (recipeId === undefined) throw "recipeId must be defined";
+    if (userId === undefined) throw "userId must be provided";
+
+    const recipe = await getRecipe(recipeId);
+
+    let update = undefined;
+    const rCollection = await recipeCollection();
+    if (recipe.likes.includes(userId)) {
+        try {
+            update = await rCollection.updateOne(
+                {_id: recipe._id},
+                {$pull: {likes: userId}});
+        } catch (e) {
+            throw `I failed to unlike this recipe: ${e}`;
+        }
+    } else {
+        try {
+            update = await rCollection.updateOne(
+                {_id: recipe._id},
+                {$push: {likes: userId}});
+        } catch (e) {
+            throw `I failed to like this recipe: ${e}`;
+        }
+        // add user id
+    }
+    if (update.modifiedCount !== 1) throw "i failed to like/unlike the recipe"
+    return await getRecipe(recipeId);
 }
 
 
 module.exports = {
     createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment, getRecipeContainingComment,
-    deleteComment }
+    deleteComment, likeRecipe
+}
