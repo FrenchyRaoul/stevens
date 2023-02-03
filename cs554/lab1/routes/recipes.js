@@ -12,7 +12,7 @@ const {ObjectId} = require('mongodb');
 // Middleware #1 *and* #2 (applied to different routes)
 async function checkAuthenticated(req, res, next) {
     if (!req.session.user) {
-        res.status(400).json({"error": "you are not currently logged in, this request cannot be completed"});
+        res.status(401).json({"error": "you are not currently logged in, this request cannot be completed"});
     }
     else {
         next()
@@ -61,7 +61,7 @@ router.get('/:id', async (req, res) => {
         let recipe = await getRecipe(req.params.id);
         res.json(recipe)
     } catch (e) {
-        res.status(404).json({"error": e});
+        res.status(404).json({"error": `no recipe found with id ${req.params.id}`});
     }
 })
 
@@ -109,16 +109,24 @@ router.patch('/:id', async (req, res) => {
         return
     }
 
+    if (reqBody.hasOwnProperty("comments")
+        || reqBody.hasOwnProperty("likes")
+        || reqBody.hasOwnProperty("_id")
+        || reqBody.hasOwnProperty("userThatPosted"))
+    {
+        res.status(403).json({"error": "you are not permitted to make changes to comments, likes, _id, or userThatPosted"});
+        return
+    }
 
     const newObject = createPatchObject(oldRecipe, reqBody);
     if (isObjectEmpty(newObject)) {
-        res.status(404).json({"error": "no difference between patch and existing object"})
+        res.status(400).json({"error": "no difference between patch and existing object"})
     }
     else {
         try {
             await validateRecipeUpdate(newObject);
         } catch (e) {
-            res.status(404).json({"error": e});
+            res.status(400).json({"error": e});
             return
         }
         try {
@@ -134,6 +142,12 @@ router.patch('/:id', async (req, res) => {
 router.post('/:id/comments', [checkAuthenticated,
     async (req, res) => {
     const {comment} = req.body;
+    try {
+        await getRecipe(req.params.id);
+    } catch {
+        res.status(404).json({"error": `no recipe found with id ${req.params.id}`})
+        return
+    }
     try {
         const recipe = await postComment(req.params.id, comment, req.session.user);
         res.json(recipe);
@@ -185,7 +199,7 @@ router.delete('/:recipeId/:commentId', [checkAuthenticated,
         const comment = await deleteComment(recipeId, commentId);
         res.json(comment);
     } catch (e) {
-        res.status(404).json({"error": e})
+        res.status(500).json({"error": e})
     }
 }])
 

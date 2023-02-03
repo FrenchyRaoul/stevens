@@ -16,7 +16,7 @@ function validatePassword(password) {
 function validateUsername(username) {
     if (username === undefined) throw "username must be provided";
     if (typeof username !== 'string') throw "username must be a string";
-    if (username.length < 3) throw "username must be at least 6 characters"
+    if (username.length < 3) throw "username must be at least 3 characters"
     if (!/^[0-9A-Za-z]+$/.test(username)) throw "username must be alphanumeric, no special characters"
 }
 
@@ -63,13 +63,12 @@ async function createUser(name, username, password) {
 }
 
 async function login(username, password) {
-    validateUsername(username);
-    validatePassword(password);
-
     username = username.toLowerCase()  // treat all usernames as case-insensitive (by forcing them to lowercase)
     const error_text = "invalid username/password combination";
     let userObject = undefined;
     try {
+        validateUsername(username);
+        validatePassword(password);
         userObject = await getUserByUsername(username);
     } catch (e) {
         throw error_text

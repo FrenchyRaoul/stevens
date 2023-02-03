@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
             req.session.user = { "username": userObject.username, "userId": userObject._id }
             res.json({ "username": userObject.username, "userId": userObject._id })
         } catch (e) {
-            res.status(400).json({"error": e})
+            res.status(401).json({"error": e})
         }
     }
 })
