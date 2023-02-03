@@ -43,7 +43,6 @@ async function validateCookingSkill(skill) {
 }
 
 async function validateRecipe(recipe) {
-    console.log(recipe);
     const {title, ingredients, steps, cookingSkillRequired} = recipe;
     await validateRecipeTitle(title);
     await validateIngredients(ingredients);
