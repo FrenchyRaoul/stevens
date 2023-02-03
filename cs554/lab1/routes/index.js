@@ -1,4 +1,3 @@
-const url = require('url');
 const recipeRoutes = require('./recipes');
 const mainRoutes = require('./main');
 
@@ -23,8 +22,19 @@ async function requestLogger(req, res, next) {
     next();
 }
 
+const urlCounter = {};
+
+// Middleware #4: log all request urls and count
+async function urlLogger(req, res, next) {
+    if (urlCounter.hasOwnProperty(req.originalUrl)) urlCounter[req.originalUrl] += 1;
+    else urlCounter[req.originalUrl] = 1;
+    console.log(`Middleware #4: ${JSON.stringify(urlCounter)}`);
+    next();
+}
+
 const constructorMethod = app => {
     app.use('*', requestLogger);  // Middleware #3: print out url, ver, and sanitized body
+    app.use('*', urlLogger);  // Middleware #3: print out url, ver, and sanitized body
     app.use('/recipes', recipeRoutes);
     app.use('/', mainRoutes);
 
