@@ -1,5 +1,6 @@
 const recipeRoutes = require('./recipes');
 const mainRoutes = require('./main');
+const {refreshSession} = require('../data/redis');
 
 
 // Middleware #3: log all request bodies, but scrape out the password if it exists
@@ -32,9 +33,20 @@ async function urlLogger(req, res, next) {
     next();
 }
 
+// Custom Middleware: refresh the session whenever a request is made to the server
+async function refreshSessionIfLoggedIn(req, res, next) {
+    try {
+        await refreshSession(req);
+    } catch (e) {
+        // console.log(`session did not refresh: ${e}`);
+    }
+    next();
+}
+
 const constructorMethod = app => {
     app.use('*', requestLogger);  // Middleware #3: print out url, ver, and sanitized body
     app.use('*', urlLogger);  // Middleware #3: print out url, ver, and sanitized body
+    app.use('*', refreshSessionIfLoggedIn)
     app.use('/recipes', recipeRoutes);
     app.use('/', mainRoutes);
 

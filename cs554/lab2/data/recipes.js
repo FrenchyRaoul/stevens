@@ -1,13 +1,6 @@
 const {recipeCollection} = require('./collections');
 const {ObjectId} = require('mongodb');
 
-const redis = require('redis');
-const client = redis.createClient();
-
-client.on('connect', function () {
-    console.log('Connected!');
-});
-
 const recipes_per_page = 50;
 
 async function validateRecipeTitle(title) {
@@ -80,7 +73,6 @@ async function getRecipes(page) {
     const page_number = (page === undefined) ? 0 : parseInt(page);
     if (isNaN(page_number) || page_number < 0) throw "if a page number is provided, it must be a positive integer";
 
-    console.log(`getting page ${page_number}`);
     const rCollection = await recipeCollection();
     return await rCollection.find({}).sort( { _id: 1} ).skip(page_number * recipes_per_page).limit(recipes_per_page).toArray();
 }
@@ -88,6 +80,8 @@ async function getRecipes(page) {
 
 async function createRecipe(recipe) {
     await validateRecipe(recipe);
+    if (typeof recipe.userThatPosted._id !== 'string') throw "user id must be a string";
+    if (typeof recipe.userThatPosted.username !== 'string') throw "username must be a string";
     const rCollection = await recipeCollection();
     const result = await rCollection.insertOne(recipe);
     return await getRecipe(result.insertedId);

@@ -1,16 +1,26 @@
+const crypto = require('crypto');
 const express = require('express');
 const {createUser, login} = require("../data/users");
 const router = express.Router();
-const {recipeCacheKey, hitCountKey, getRedis} = require('../data/redis')
+const {
+    recipeCacheKey, hitCountKey, authCookieName, getRedis, createSession, destroySession, checkLoggedIn
+} = require('../data/redis')
 
 
-router.post('/signup', async (req, res) => {
-    // if a user is already logged in
-    if (req.session.user) {
+async function generateSessionId() {
+    return crypto.randomUUID();
+}
+
+
+async function enforceNotLoggedIn(req, res, next) {
+    if (await checkLoggedIn(req)) {
         res.status(400).json({"error": "a user is already logged in"})
         return
     }
+    next()
+}
 
+router.post('/signup', [enforceNotLoggedIn, async (req, res) => {
     try {
         const {name, username, password} = req.body;
         const user = await createUser(name, username, password);
@@ -18,35 +28,30 @@ router.post('/signup', async (req, res) => {
     } catch (e) {
         res.status(400).json({"error": e})
     }
-})
+}])
 
 
-router.post('/login', async (req, res) => {
+router.post('/login', [enforceNotLoggedIn, async (req, res) => {
     const {username, password} = req.body;
-
-    // if a user is already logged in
-    if (req.session.user) {
-        res.status(400).json({"error": "a user is already logged in"})
+    try {
+        const userObject = await login(username, password);
+        const sessionId = await generateSessionId();
+        const user = {"username": userObject.username, "userId": userObject._id};
+        await createSession(sessionId, user);
+        res.cookie(authCookieName, sessionId);
+        res.json(user);
+    } catch (e) {
+        res.status(401).json({"error": e})
     }
-    else {
-        // otherwise, attempt to log in
-        try {
-            const userObject = await login(username, password);
-            req.session.user = { "username": userObject.username, "userId": userObject._id }
-            res.json({ "username": userObject.username, "userId": userObject._id })
-        } catch (e) {
-            res.status(401).json({"error": e})
-        }
-    }
-})
+}])
 
 
 router.get('/logout', async (req, res) => {
-    if (!req.session.user) {
+    if (!(await checkLoggedIn(req))) {
         res.status(400).json({"error": "you are not currently logged in"})
         return
     }
-    req.session.destroy()
+    await destroySession(req.cookies[authCookieName]);
     res.json({"logout": true})
 })
 

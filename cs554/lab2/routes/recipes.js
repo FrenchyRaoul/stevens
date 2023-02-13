@@ -3,9 +3,16 @@ const {
     createRecipe, getRecipe, getRecipes, updateRecipe, validateRecipeUpdate, postComment, getRecipeContainingComment,
     deleteComment, likeRecipe
 } = require('../data/recipes');
+const {
+    checkLoggedIn,
+    authCookieName,
+    getUserForSessionId,
+    getRedis,
+    recipeCacheKey,
+    hitCountKey
+} = require("../data/redis");
 const express = require('express');
 const router = express.Router();
-const {recipeCacheKey, hitCountKey, getRedis} = require('../data/redis')
 
 
 async function clearPageCache() {
@@ -28,7 +35,7 @@ async function updateRedisRecipe(recipe) {
 
 // Middleware #1 *and* #2 (applied to different routes)
 async function checkAuthenticated(req, res, next) {
-    if (!req.session.user) {
+    if (!(await checkLoggedIn(req))) {
         res.status(401).json({"error": "you are not currently logged in, this request cannot be completed"});
     } else {
         next()
@@ -131,7 +138,8 @@ router.get('/', [getCachedRecipes, async (req, res) => {
 
 router.post('/', [async (req, res) => {
     let recipe = req.body;
-    recipe.userThatPosted = {"_id": req.session.user.userId, "username": req.session.user.username};
+    const user = await getUserForSessionId(req.cookies[authCookieName]);
+    recipe.userThatPosted = {"_id": user.userId, "username": user.username};
     recipe.comments = [];
     recipe.likes = [];
     try {
@@ -166,7 +174,8 @@ router.patch('/:id', async (req, res) => {
         return
     }
 
-    if (req.session.user.userId !== oldRecipe.userThatPosted._id) {
+    const user = await getUserForSessionId(req.cookies[authCookieName]);
+    if (user.userId !== oldRecipe.userThatPosted._id) {
         res.status(403).json({"error": "you are not permitted to patch this recipe"});
         return
     }
@@ -174,8 +183,7 @@ router.patch('/:id', async (req, res) => {
     if (reqBody.hasOwnProperty("comments")
         || reqBody.hasOwnProperty("likes")
         || reqBody.hasOwnProperty("_id")
-        || reqBody.hasOwnProperty("userThatPosted"))
-    {
+        || reqBody.hasOwnProperty("userThatPosted")) {
         res.status(403).json({"error": "you are not permitted to make changes to comments, likes, _id, or userThatPosted"});
         return
     }
@@ -206,16 +214,17 @@ router.patch('/:id', async (req, res) => {
 // Middleware #2: Check authentication prior to handling the post as per lab instructions
 router.post('/:id/comments', [checkAuthenticated,
     async (req, res) => {
-    const {comment} = req.body;
-    try {
-        await getRecipe(req.params.id);
-    } catch {
-        res.status(404).json({"error": `no recipe found with id ${req.params.id}`})
-        return
-    }
+        const {comment} = req.body;
+        try {
+            await getRecipe(req.params.id);
+        } catch {
+            res.status(404).json({"error": `no recipe found with id ${req.params.id}`})
+            return
+        }
         let recipe;
         try {
-            recipe = await postComment(req.params.id, comment, req.session.user);
+            const user = await getUserForSessionId(req.cookies[authCookieName]);
+            recipe = await postComment(req.params.id, comment, user);
             res.json(recipe);
         } catch (e) {
             res.status(400).json({"error": e})
@@ -254,24 +263,25 @@ router.delete('/:recipeId/:commentId', [checkAuthenticated,
             }
         }
         if (owner === undefined) {
-        res.status(500).json({"error": "could not determine user owner of comment"});
-        return
-    }
+            res.status(500).json({"error": "could not determine user owner of comment"});
+            return
+        }
 
-    if (req.session.user.userId !== owner) {
-        res.status(403).json({"error": "you do not have permission to delete this comment"});
-        return
-    }
+        const user = await getUserForSessionId(req.cookies[authCookieName]);
+        if (user.userId !== owner) {
+            res.status(403).json({"error": "you do not have permission to delete this comment"});
+            return
+        }
 
-    try {
-        recipe = await deleteComment(recipeId, commentId);
-        res.json(recipe);
-    } catch (e) {
-        res.status(500).json({"error": e})
-        return;
-    }
+        try {
+            recipe = await deleteComment(recipeId, commentId);
+            res.json(recipe);
+        } catch (e) {
+            res.status(500).json({"error": e})
+            return;
+        }
         await updateRedisRecipe(recipe);
-}])
+    }])
 
 router.post('/:id/likes', async (req, res) => {
     try {
@@ -280,7 +290,8 @@ router.post('/:id/likes', async (req, res) => {
         res.status(404).json({"error": `no recipe found with id ${req.params.id}`});
         return
     }
-    const userId = req.session.user.userId;
+    const user = await getUserForSessionId(req.cookies[authCookieName]);
+    const userId = user.userId;
     let recipe;
     try {
         recipe = await likeRecipe(req.params.id, userId);
