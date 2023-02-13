@@ -1,6 +1,13 @@
 const {recipeCollection} = require('./collections');
 const {ObjectId} = require('mongodb');
 
+const redis = require('redis');
+const client = redis.createClient();
+
+client.on('connect', function () {
+    console.log('Connected!');
+});
+
 const recipes_per_page = 50;
 
 async function validateRecipeTitle(title) {
@@ -43,7 +50,12 @@ async function validateCookingSkill(skill) {
 }
 
 async function validateRecipe(recipe) {
-    const {title, ingredients, steps, cookingSkillRequired} = recipe;
+    let title, ingredients, steps, cookingSkillRequired;
+    try {
+        ({title, ingredients, steps, cookingSkillRequired} = recipe);
+    } catch (e) {
+        throw "recipe missing fields. recipe must include: title, ingredients, steps, cookingSkillRequired";
+    }
     await validateRecipeTitle(title);
     await validateIngredients(ingredients);
     await validateSteps(steps);
@@ -63,10 +75,12 @@ async function getRecipe(id) {
     return recipe
 }
 
+
 async function getRecipes(page) {
-    const page_number = (page === undefined) ? 0 : parseInt(page) - 1;
+    const page_number = (page === undefined) ? 0 : parseInt(page);
     if (isNaN(page_number) || page_number < 0) throw "if a page number is provided, it must be a positive integer";
 
+    console.log(`getting page ${page_number}`);
     const rCollection = await recipeCollection();
     return await rCollection.find({}).sort( { _id: 1} ).skip(page_number * recipes_per_page).limit(recipes_per_page).toArray();
 }

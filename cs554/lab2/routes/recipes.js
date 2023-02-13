@@ -6,6 +6,27 @@ const {
 const express = require('express');
 const router = express.Router();
 
+const redis = require('redis');
+const client = redis.createClient();
+
+const recipeCacheKey = "recipes"
+const hitCountKey = "accessCount";
+
+
+client.on('connect', function () {
+    console.log('Redis connected!');
+});
+
+client.on("error", (err) => {
+        console.log(`Redis error: ${error}`);
+    }
+)
+
+async function connectRedis() {
+    if (!client.isOpen) await client.connect();
+    // await client.flushAll();
+}
+
 
 // Middleware #1 *and* #2 (applied to different routes)
 async function checkAuthenticated(req, res, next) {
@@ -55,41 +76,90 @@ router.post('*', checkAuthenticated);
 router.put('*', checkAuthenticated);
 router.patch('*', checkAuthenticated);
 
-router.get('/', async (req, res) => {
+
+async function getCachedRecipes(req, res, next) {
+    const page_number = (req.query.page === undefined) ? 0 : parseInt(req.query.page) - 1;
+    if (isNaN(page_number) || page_number < 0) {
+        res.status(400).json({"error": "if a page number is provided, it must be a positive integer"})
+        return
+    }
+    const key = `PAGE_${page_number}`
+    await connectRedis();
+    if (await client.exists((key))) {
+        const data = JSON.parse(await client.get(key));
+        res.json(data)
+        return
+    }
+    next()
+}
+
+async function getCachedRecipe(req, res, next) {
+    await connectRedis();
+    let cacheVal = await client.hGet(recipeCacheKey, req.params.id);
+    if (cacheVal !== null) {
+        const data = JSON.parse(cacheVal);
+        res.json(data);
+        await client.zIncrBy(hitCountKey, 1, req.params.id);
+        return
+    }
+    next()
+}
+
+
+router.get('/', [getCachedRecipes, async (req, res) => {
+    const page_number = (req.query.page === undefined) ? 0 : parseInt(req.query.page) - 1;
+    if (isNaN(page_number) || page_number < 0) {
+        res.status(400).json({"error": "if a page number is provided, it must be a positive integer"})
+        return
+    }
+
     let recipes = undefined;
     try {
-        recipes = await getRecipes(req.query.page);
+        recipes = await getRecipes(page_number);
         if (!recipes.length) {
             res.status(404).json({"error": "no recipes found"});
-        } else {
-            res.json(recipes);
+            return
         }
     } catch (e) {
-        res.status(400).json({"error": e});
+        res.status(500).json({"error": e});
+        return
     }
-})
 
-router.post('/', async (req, res) => {
+    res.json(recipes);
+    await connectRedis();
+    const key = `PAGE_${page_number}`;
+    await client.set(key, JSON.stringify(recipes));
+}])
+
+router.post('/', [async (req, res) => {
+    let recipe = req.body;
+    recipe.userThatPosted = {"_id": req.session.user.userId, "username": req.session.user.username};
+    recipe.comments = [];
+    recipe.likes = [];
     try {
-        let recipe = req.body;
-        recipe.userThatPosted = {"_id": req.session.user.userId, "username": req.session.user.username};
-        recipe.comments = [];
-        recipe.likes = [];
         recipe = await createRecipe(recipe);
         res.json(recipe);
     } catch (e) {
         res.status(400).json({"error": e});
+        return
     }
-})
+    // push the recipe into the cache an set to accessed = 1
+    await connectRedis();
+    await client.hSet(recipeCacheKey, recipe._id.toString(), JSON.stringify(recipe));
+    await client.zIncrBy(hitCountKey, 1, recipe._id.toString());
+}])
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', [getCachedRecipe, async (req, res) => {
     try {
         let recipe = await getRecipe(req.params.id);
         res.json(recipe)
+        await connectRedis();
+        await client.hSet(recipeCacheKey, req.params.id, JSON.stringify(recipe));
+        await client.zIncrBy(hitCountKey, 1, req.params.id);
     } catch (e) {
         res.status(404).json({"error": `no recipe found with id ${req.params.id}`});
     }
-})
+}])
 
 
 router.patch('/:id', async (req, res) => {
@@ -116,6 +186,7 @@ router.patch('/:id', async (req, res) => {
         return
     }
 
+    let newRecipe;
     const newObject = createPatchObject(oldRecipe, reqBody);
     if (isObjectEmpty(newObject)) {
         res.status(400).json({"error": "no difference between patch and existing object"})
@@ -128,11 +199,15 @@ router.patch('/:id', async (req, res) => {
             return
         }
         try {
-            const result = await updateRecipe(req.params.id, newObject);
-            res.json(result);
+            newRecipe = await updateRecipe(req.params.id, newObject);
+            res.json(newRecipe);
         } catch (e) {
             res.status(500).json({"error": e});
+            return
         }
+        await connectRedis();
+        await client.hSet(recipeCacheKey, newRecipe._id.toString(), JSON.stringify(newRecipe));
+        await client.zIncrBy(hitCountKey, 1, newRecipe._id.toString());
     }
 })
 
@@ -146,13 +221,17 @@ router.post('/:id/comments', [checkAuthenticated,
         res.status(404).json({"error": `no recipe found with id ${req.params.id}`})
         return
     }
-    try {
-        const recipe = await postComment(req.params.id, comment, req.session.user);
-        res.json(recipe);
-    } catch (e) {
-        res.status(400).json({"error": e})
-    }
-}])
+        let recipe;
+        try {
+            recipe = await postComment(req.params.id, comment, req.session.user);
+            res.json(recipe);
+        } catch (e) {
+            res.status(400).json({"error": e})
+            return
+        }
+        await connectRedis();
+        await client.hSet(recipeCacheKey, req.params.id)
+    }])
 
 // for debug
 router.get('/:recipeId/:commentId', async (req, res) => {
