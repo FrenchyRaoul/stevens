@@ -1,6 +1,7 @@
 const express = require('express');
-const {createUser, login, getUserByUsername} = require("../data/users");
+const {createUser, login} = require("../data/users");
 const router = express.Router();
+const {recipeCacheKey, hitCountKey, getRedis} = require('../data/redis')
 
 
 router.post('/signup', async (req, res) => {
@@ -47,6 +48,21 @@ router.get('/logout', async (req, res) => {
     }
     req.session.destroy()
     res.json({"logout": true})
+})
+
+
+router.get('/mostaccessed', async (req, res) => {
+    try {
+        const client = await getRedis();
+        const recipeIds = (await client.zRange(hitCountKey, 0, -1, {
+            "REV": true,
+            "BYSCORE": true,
+        })).slice(0, 10);
+        const recipes = (await client.hmGet(recipeCacheKey, recipeIds)).map(JSON.parse);
+        res.json(recipes);
+    } catch (e) {
+        res.status(500).json({"error": e});
+    }
 })
 
 

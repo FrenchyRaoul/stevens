@@ -5,26 +5,25 @@ const {
 } = require('../data/recipes');
 const express = require('express');
 const router = express.Router();
-
-const redis = require('redis');
-const client = redis.createClient();
-
-const recipeCacheKey = "recipes"
-const hitCountKey = "accessCount";
+const {recipeCacheKey, hitCountKey, getRedis} = require('../data/redis')
 
 
-client.on('connect', function () {
-    console.log('Redis connected!');
-});
-
-client.on("error", (err) => {
-        console.log(`Redis error: ${error}`);
+async function clearPageCache() {
+    const client = await getRedis();
+    const {keys} = await client.scan(0, {"MATCH": "PAGE_*"});
+    for (key of keys) {
+        await client.del(key);
     }
-)
+}
 
-async function connectRedis() {
-    if (!client.isOpen) await client.connect();
-    // await client.flushAll();
+async function updateRedisRecipe(recipe) {
+    const client = await getRedis();
+    const id = recipe._id.toString();
+    await connectRedis();
+    await client.hSet(recipeCacheKey, id, JSON.stringify(recipe));
+    await client.zIncrBy(hitCountKey, 1, id);
+
+    await clearPageCache();
 }
 
 
@@ -84,7 +83,7 @@ async function getCachedRecipes(req, res, next) {
         return
     }
     const key = `PAGE_${page_number}`
-    await connectRedis();
+    const client = await getRedis();
     if (await client.exists((key))) {
         const data = JSON.parse(await client.get(key));
         res.json(data)
@@ -94,7 +93,7 @@ async function getCachedRecipes(req, res, next) {
 }
 
 async function getCachedRecipe(req, res, next) {
-    await connectRedis();
+    const client = await getRedis();
     let cacheVal = await client.hGet(recipeCacheKey, req.params.id);
     if (cacheVal !== null) {
         const data = JSON.parse(cacheVal);
@@ -126,7 +125,7 @@ router.get('/', [getCachedRecipes, async (req, res) => {
     }
 
     res.json(recipes);
-    await connectRedis();
+    const client = await getRedis();
     const key = `PAGE_${page_number}`;
     await client.set(key, JSON.stringify(recipes));
 }])
@@ -144,18 +143,14 @@ router.post('/', [async (req, res) => {
         return
     }
     // push the recipe into the cache an set to accessed = 1
-    await connectRedis();
-    await client.hSet(recipeCacheKey, recipe._id.toString(), JSON.stringify(recipe));
-    await client.zIncrBy(hitCountKey, 1, recipe._id.toString());
+    await updateRedisRecipe(recipe)
 }])
 
 router.get('/:id', [getCachedRecipe, async (req, res) => {
     try {
         let recipe = await getRecipe(req.params.id);
-        res.json(recipe)
-        await connectRedis();
-        await client.hSet(recipeCacheKey, req.params.id, JSON.stringify(recipe));
-        await client.zIncrBy(hitCountKey, 1, req.params.id);
+        res.json(recipe);
+        await updateRedisRecipe(recipe);
     } catch (e) {
         res.status(404).json({"error": `no recipe found with id ${req.params.id}`});
     }
@@ -205,9 +200,7 @@ router.patch('/:id', async (req, res) => {
             res.status(500).json({"error": e});
             return
         }
-        await connectRedis();
-        await client.hSet(recipeCacheKey, newRecipe._id.toString(), JSON.stringify(newRecipe));
-        await client.zIncrBy(hitCountKey, 1, newRecipe._id.toString());
+        await updateRedisRecipe(newRecipe);
     }
 })
 
@@ -229,40 +222,39 @@ router.post('/:id/comments', [checkAuthenticated,
             res.status(400).json({"error": e})
             return
         }
-        await connectRedis();
-        await client.hSet(recipeCacheKey, req.params.id)
+        await updateRedisRecipe(recipe);
     }])
 
 // for debug
-router.get('/:recipeId/:commentId', async (req, res) => {
-    const { recipeId, commentId } = req.params;
-    try {
-        const comment = await getRecipeContainingComment(recipeId, commentId);
-        res.json(comment);
-    } catch (e) {
-        res.status(404).json({"error": e})
-    }
-})
+// router.get('/:recipeId/:commentId', async (req, res) => {
+//     const { recipeId, commentId } = req.params;
+//     try {
+//         const comment = await getRecipeContainingComment(recipeId, commentId);
+//         res.json(comment);
+//     } catch (e) {
+//         res.status(404).json({"error": e})
+//     }
+// })
 
 // Middleware #2: Check authentication prior to handling delete
 router.delete('/:recipeId/:commentId', [checkAuthenticated,
     async (req, res) => {
-    const { recipeId, commentId } = req.params;
-    let recipe = undefined;
-    try {
-        recipe = await getRecipeContainingComment(recipeId, commentId);
-    } catch (e) {
-        res.status(404).json({"error": e});
-        return
-    }
-
-    let owner = undefined;
-    for (const comment of recipe.comments) {
-        if (comment._id.toString() === commentId) {
-            owner = comment.userThatPostedComment._id;
+        const {recipeId, commentId} = req.params;
+        let recipe = undefined;
+        try {
+            recipe = await getRecipeContainingComment(recipeId, commentId);
+        } catch (e) {
+            res.status(404).json({"error": e});
+            return
         }
-    }
-    if (owner === undefined) {
+
+        let owner = undefined;
+        for (const comment of recipe.comments) {
+            if (comment._id.toString() === commentId) {
+                owner = comment.userThatPostedComment._id;
+            }
+        }
+        if (owner === undefined) {
         res.status(500).json({"error": "could not determine user owner of comment"});
         return
     }
@@ -273,11 +265,13 @@ router.delete('/:recipeId/:commentId', [checkAuthenticated,
     }
 
     try {
-        const comment = await deleteComment(recipeId, commentId);
-        res.json(comment);
+        recipe = await deleteComment(recipeId, commentId);
+        res.json(recipe);
     } catch (e) {
         res.status(500).json({"error": e})
+        return;
     }
+        await updateRedisRecipe(recipe);
 }])
 
 router.post('/:id/likes', async (req, res) => {
@@ -288,12 +282,16 @@ router.post('/:id/likes', async (req, res) => {
         return
     }
     const userId = req.session.user.userId;
+    let recipe;
     try {
-        const result = await likeRecipe(req.params.id, userId);
-        res.json(result);
+        recipe = await likeRecipe(req.params.id, userId);
+        res.json(recipe);
     } catch (e) {
         res.status(500).json({"error": `failed to like/unlike recipe: ${e}`})
+        return
     }
+    await updateRedisRecipe(recipe);
 })
+
 
 module.exports = router;
