@@ -19,7 +19,6 @@ async function clearPageCache() {
 async function updateRedisRecipe(recipe) {
     const client = await getRedis();
     const id = recipe._id.toString();
-    await connectRedis();
     await client.hSet(recipeCacheKey, id, JSON.stringify(recipe));
     await client.zIncrBy(hitCountKey, 1, id);
 
