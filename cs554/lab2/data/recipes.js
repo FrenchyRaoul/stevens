@@ -121,10 +121,12 @@ async function validateComment(comment) {
 async function postComment(recipeId, comment, user) {
     if (recipeId === undefined) throw "recipeId must be defined";
     if (user === undefined) throw "user must be provided";
+    if (user._id === undefined) throw "user object has no id"
+    if (user.username === undefined) throw "user object has no username"
 
-    let recipe_object = undefined;
+    let recipe_object_id = undefined;
     try {
-        recipe_object = ObjectId(recipeId);
+        recipe_object_id = ObjectId(recipeId);
     } catch (e) {
         throw `bad object id: ${e}`;
     }
@@ -133,15 +135,15 @@ async function postComment(recipeId, comment, user) {
     const newComment = {
         _id: new ObjectId(),
         "userThatPostedComment": {
-            _id: user.userId,
+            _id: user._id,
             username: user.username
         },
         "comment": comment};
     const rCollection = await recipeCollection();
     try {
         await rCollection.updateOne(
-            { _id: recipe_object },
-            { $push: { comments: newComment}});
+            {_id: recipe_object_id},
+            {$push: {comments: newComment}});
     } catch (e) {
         throw `I failed to insert a comment on this recipe: ${e}`;
     }

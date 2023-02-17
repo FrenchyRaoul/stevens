@@ -139,7 +139,7 @@ router.get('/', [getCachedRecipes, async (req, res) => {
 router.post('/', [async (req, res) => {
     let recipe = req.body;
     const user = await getUserForSessionId(req.cookies[authCookieName]);
-    recipe.userThatPosted = {"_id": user.userId, "username": user.username};
+    recipe.userThatPosted = {"_id": user._id, "username": user.username};
     recipe.comments = [];
     recipe.likes = [];
     try {
@@ -175,7 +175,7 @@ router.patch('/:id', async (req, res) => {
     }
 
     const user = await getUserForSessionId(req.cookies[authCookieName]);
-    if (user.userId !== oldRecipe.userThatPosted._id) {
+    if (user._id !== oldRecipe.userThatPosted._id) {
         res.status(403).json({"error": "you are not permitted to patch this recipe"});
         return
     }
@@ -266,9 +266,8 @@ router.delete('/:recipeId/:commentId', [checkAuthenticated,
             res.status(500).json({"error": "could not determine user owner of comment"});
             return
         }
-
         const user = await getUserForSessionId(req.cookies[authCookieName]);
-        if (user.userId !== owner) {
+        if (user._id !== owner) {
             res.status(403).json({"error": "you do not have permission to delete this comment"});
             return
         }
@@ -291,7 +290,7 @@ router.post('/:id/likes', async (req, res) => {
         return
     }
     const user = await getUserForSessionId(req.cookies[authCookieName]);
-    const userId = user.userId;
+    const userId = user._id;
     let recipe;
     try {
         recipe = await likeRecipe(req.params.id, userId);
