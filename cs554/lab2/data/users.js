@@ -1,4 +1,3 @@
-const usersCollection = require("./collections");
 const bcrypt = require('bcrypt');
 const {userCollection} = require("./collections");
 const salt = require('../config/config').salt;
@@ -56,8 +55,10 @@ async function createUser(name, username, password) {
     } catch {
         const hashed = await bcrypt.hash(password, salt);
         const coll = await userCollection();
-        const result = await coll.insertOne({"username": username, "password": hashed, "name": name});
-        return await getUserByID(result.insertedId);
+        const insert = await coll.insertOne({"username": username, "password": hashed, "name": name});
+        let result = await getUserByID(insert.insertedId);
+        delete result.password
+        return result
     }
     throw `user ${username} already exists!`
 }
@@ -77,13 +78,13 @@ async function login(username, password) {
     if (!(userObject.password === hashed)) {
         throw error_text;
     }
+    delete userObject.password;
     return userObject;
 }
 
 module.exports = {
     createUser,
     login,
-    getUserByUsername,
 }
 
 

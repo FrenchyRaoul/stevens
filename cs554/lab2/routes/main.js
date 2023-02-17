@@ -36,12 +36,11 @@ router.post('/login', [enforceNotLoggedIn, async (req, res) => {
     try {
         const userObject = await login(username, password);
         const sessionId = await generateSessionId();
-        const user = {"username": userObject.username, "userId": userObject._id};
-        await createSession(sessionId, user);
+        await createSession(sessionId, userObject);
         res.cookie(authCookieName, sessionId);
-        res.json(user);
+        res.json(userObject);
     } catch (e) {
-        res.status(401).json({"error": e})
+        res.status(401).json({"error": e});
     }
 }])
 

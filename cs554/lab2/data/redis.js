@@ -27,7 +27,7 @@ async function getRedis() {
 
 async function createSession(sessionId, user) {
     if (sessionId === undefined) throw "cannot create a session with no sessionId";
-    if (user === undefined) throw "cannot create a session withou a user";
+    if (user === undefined) throw "cannot create a session without a user";
     const client = await getRedis();
     await client.set(getSessionKey(sessionId), JSON.stringify(user), {"EX": sessionTimeout});
 }
