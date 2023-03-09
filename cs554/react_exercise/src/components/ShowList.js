@@ -159,14 +159,6 @@ const ShowList = (props) => {
             });
     }
 
-    if (!pageRegex.test(pageNumber)) {
-        return (
-            <div>
-                <h2>Invalid page number!</h2>
-            </div>
-        )
-    }
-
     const changePage = (page) => {
         navigate(`/shows/page/${page}`);
         setPageNumber(page);
@@ -178,12 +170,27 @@ const ShowList = (props) => {
     let nextPage = ['pagelink-disabled', 0];
     let cardArea;
 
-    if (loading) {
+    if (!pageRegex.test(pageNumber)) {
+        firstPage = 'pagelink';
+        cardArea =
+            <div>
+                <h2>Invalid page number!</h2>
+            </div>;
+    }
+
+    else if (loading) {
         firstPage = 'pagelink-loading';
         previousPage = ['pagelink-loading', 0];
         nextPage = ['pagelink-loading', 0];
         cardArea = <div>
             <h2>Loading....</h2>
+        </div>;
+    }
+
+    else if (pageData && !pageData.previous && !pageData.next) {
+        firstPage = 'pagelink';
+        cardArea = <div>
+            <h2>There is no data for this page!</h2>
         </div>;
     }
 
