@@ -14,11 +14,12 @@ import {
 
 import '../App.css';
 
+const regex = /(<([^>]+)>)/gi;  // for stripping html characters
+const pageRegex = /^\d+$/;
+
 const ShowList = (props) => {
     const {pagenum} = useParams();
     const navigate = useNavigate();
-    const regex = /(<([^>]+)>)/gi;  // for stripping html characters
-    const pageRegex = /^\d+$/;
     const [loading, setLoading] = useState(true);
     const [searchData, setSearchData] = useState(undefined);
     const [searchTerm, setSearchTerm] = useState('');
