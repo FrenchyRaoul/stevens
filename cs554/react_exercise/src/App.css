@@ -84,13 +84,24 @@ col-md-4 {
 }
 
 .pagelink:hover {
-	background-color: transparent;
+	background-color: lightblue;
 	color: green;
 	text-underline: green;
 }
 
 .pagelink-disabled {
 	visibility: hidden;
+}
+
+
+.pagelink-loading {
+	padding: 0.4rem 0.8rem;
+	background-color: white;
+	border-radius: 3px;
+	color: gray;
+	text-decoration: none !important;
+	margin: 5px;
+	pointer-events: none;
 }
 
 li {

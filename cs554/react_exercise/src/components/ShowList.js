@@ -4,7 +4,6 @@ import {Link, useParams, useNavigate} from 'react-router-dom';
 import SearchShows from './SearchShows';
 import noImage from '../img/download.jpeg';
 import {
-    Button,
     Card,
     CardActionArea,
     CardContent,
@@ -16,55 +15,50 @@ import {
 import '../App.css';
 
 const ShowList = (props) => {
-    const {page} = useParams();
+    const {pagenum} = useParams();
     const navigate = useNavigate();
-    console.log(`my params: ${JSON.stringify(page)}`);
     const regex = /(<([^>]+)>)/gi;  // for stripping html characters
     const pageRegex = /^\d+$/;
     const [loading, setLoading] = useState(true);
     const [searchData, setSearchData] = useState(undefined);
-    const [showsData, setShowsData] = useState(undefined);
     const [searchTerm, setSearchTerm] = useState('');
-    const [pageNumber, setPageNumber] = useState(page);
-    const [nextExists, setNextExists] = useState(true);
+    const [pageNumber, setPageNumber] = useState(pagenum);
+    const [pageData, setPageData] = useState({
+        showData: undefined,
+        previous: false,
+        next: false,
+    });
+    // const [nextExists, setNextExists] = useState(true);
     let card = null;
 
     useEffect(() => {
-        console.log('on load/page change useeffect');
+        const pageInt = parseInt(pageNumber);
         async function fetchData() {
             try {
                 const {data} = await axios.get('http://api.tvmaze.com/shows?page=' + pageNumber);
-                // const {data} = await axios.get('http://api.tvmaze.com/shows');
-                setShowsData(data);
-                console.log(`loaded ${data.length} shows`);
+                let next;
+                try {
+                    await axios.get('http://api.tvmaze.com/shows?page=' + (pageInt + 1));
+                    next = true;
+                } catch {
+                    next = false;
+                }
+                setPageData({
+                    showData: data,
+                    previous: (pageInt > 0),
+                    next: next,
+                });
                 setLoading(false);
             } catch (e) {
                 setLoading(false);
-                setShowsData([]);
+                setPageData({
+                    showData: undefined,
+                    previous: false,
+                    next: false,
+                });
                 console.log(e);
             }
-
-            const pageInt = parseInt(pageNumber);
-            const next = pageInt + 1;
-            try {
-                await axios.get('http://api.tvmaze.com/shows?page=' + next);
-                setNextExists(true);
-            } catch {
-                setNextExists(false);
-            }
-
         }
-
-        // async function checkNext() {
-        //     const pageInt = parseInt(pageNumber);
-        //     const next = pageInt + 1;
-        //     try {
-        //         await axios.get('http://api.tvmaze.com/shows?page=' + next);
-        //         setNextExists(true);
-        //     } catch {
-        //         setNextExists(false);
-        //     }
-        // }
 
         if (pageRegex.test(pageNumber)) {
             fetchData();
@@ -73,10 +67,8 @@ const ShowList = (props) => {
     }, [pageNumber]);
 
     useEffect(() => {
-        console.log('search useEffect fired');
         async function fetchData() {
             try {
-                console.log(`in fetch searchTerm: ${searchTerm}`);
                 const {data} = await axios.get(
                     'http://api.tvmaze.com/search/shows?q=' + searchTerm
                 );
@@ -87,7 +79,6 @@ const ShowList = (props) => {
             }
         }
         if (searchTerm) {
-            console.log('searchTerm is set');
             fetchData();
         }
     }, [searchTerm]);
@@ -162,14 +153,13 @@ const ShowList = (props) => {
             });
     } else {
         card =
-            showsData &&
-            showsData.map((show) => {
+            pageData && pageData.showData &&
+            pageData.showData.map((show) => {
                 return buildCard(show);
             });
     }
 
     if (!pageRegex.test(pageNumber)) {
-        console.log("got a bad page number");
         return (
             <div>
                 <h2>Invalid page number!</h2>
@@ -180,58 +170,59 @@ const ShowList = (props) => {
     const changePage = (page) => {
         navigate(`/shows/page/${page}`);
         setPageNumber(page);
+        setLoading(true);
     }
+
+    let firstPage = 'pagelink-disabled';
+    let previousPage = ['pagelink-disabled', 0];
+    let nextPage = ['pagelink-disabled', 0];
+    let cardArea;
 
     if (loading) {
-        return (
-            <div>
-                <h2>Loading....</h2>
-            </div>
-        );
-    } else {
-        // genereate next/previous links
-        const pageInt = parseInt(pageNumber);
-        let firstPage = 'pagelink';
-        let previousPage;
-        let nextPage;
+        firstPage = 'pagelink-loading';
+        previousPage = ['pagelink-loading', 0];
+        nextPage = ['pagelink-loading', 0];
+        cardArea = <div>
+            <h2>Loading....</h2>
+        </div>;
+    }
+
+    else {
         if (!searchTerm) {
-            if (pageInt === 0) {
-                previousPage = ['pagelink-disabled', 0];
-                firstPage = 'pagelink-disabled';
-            } else {
-                previousPage = ['pagelink', pageInt - 1]
+            const pageInt = parseInt(pageNumber);
+            if (pageData.previous) {
+                firstPage = 'pagelink';
+                previousPage = ['pagelink', pageInt - 1];
             }
-            if (nextExists) {
+            if (pageData.next) {
                 nextPage = ['pagelink', pageInt + 1];
             }
-            else {
-                nextPage = ['pagelink-disabled', 0]
-            }
         }
-
-        return (
-            <div>
-                <SearchShows searchValue={searchValue} />
-                <br />
-                <br />
-                <button className={firstPage} onClick={() => changePage(0)} >First Page</button>
-                <button className={previousPage[0]} onClick={() => changePage(previousPage[1])}>Previous Page</button>
-                <button className={nextPage[0]} onClick={() => changePage(nextPage[1])}>Next Page</button>
-                <br />
-                <br />
-                <Grid
-                    container
-                    spacing={2}
-                    sx={{
-                        flexGrow: 1,
-                        flexDirection: 'row'
-                    }}
-                >
-                    {card}
-                </Grid>
-            </div>
-        );
+        cardArea = <Grid
+            container
+            spacing={2}
+            sx={{
+                flexGrow: 1,
+                flexDirection: 'row'
+            }}
+        >
+            {card}
+        </Grid>
     }
-};
+
+    return (
+        <div>
+            <SearchShows searchValue={searchValue} />
+            <br />
+            <br />
+            <button className={firstPage} onClick={() => changePage(0)} >First Page</button>
+            <button className={previousPage[0]} onClick={() => changePage(previousPage[1])}>Previous Page</button>
+            <button className={nextPage[0]} onClick={() => changePage(nextPage[1])}>Next Page</button>
+            <br />
+            <br />
+            {cardArea}
+        </div>
+    );
+}
 
 export default ShowList;
