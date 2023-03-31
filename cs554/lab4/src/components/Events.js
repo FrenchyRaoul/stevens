@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useSearchParams, useParams} from "react-router-dom";
 import {Button, Card, CardActions, CardActionArea, CardContent, CardMedia, Grid, Typography} from '@mui/material';
 import '../App.css';
+import PageNav from "./PageNav";
 
 const maxDepth = 1000;
 const size = 25;
@@ -95,15 +96,9 @@ const EventCard = (event)=> {
 
 const Events = ()=>{
     // const maxPage = useRef(); instead, use calculated max page
+    const [page, setPage] = useState(Number(useParams()['page']))
     const [loading, setLoading] = useState(true);
     const [eventData, setEventData] = useState(undefined);
-
-    let page = Number(useParams()['page']);
-    // if (!Number.isInteger(page)) {
-    //     return <h1>PAGE IS NOT A NUMBER</h1>
-    // }
-    // page = Number(page);
-
 
     useEffect(() => {
         console.log('loading event data');
@@ -126,9 +121,22 @@ const Events = ()=>{
         fetchData();
     }, []);
 
+    const morePages = (page < maxPage);
+    const lessPages = (page > 1);
+    const pages = {
+        'morePages': morePages,
+        'lessPages': lessPages,
+        'firstPage': '/events/page/1',
+        'previousPage': {'url': `/events/page/${page-1}`, 'page': page-1},
+        'nextPage': {'url': `/events/page/${page+1}`, 'page': page+1},
+        'lastPage': {'url': `/events/page/${maxPage}`, 'page': maxPage},
+        'changePage': setPage
+    }
+
     if (loading) {
         return (
             <div>
+                {<PageNav pages={pages} />}
                 <h2>Loading....</h2>
             </div>
         );
@@ -136,9 +144,12 @@ const Events = ()=>{
         const cards = eventData.map((event) => {
             return EventCard(event)
         })
+
         return (
             <div>
-                <h2>I found {eventData.length} events!</h2>
+                {<PageNav pages={pages} />}
+                <br />
+                <br />
                 <Grid
                     container
                     spacing={2}

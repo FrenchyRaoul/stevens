@@ -4,6 +4,7 @@ import React from 'react';
 import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 
 import Events from "./components/Events";
+import Home from "./components/Home";
 
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -16,26 +17,26 @@ function App() {
           <header className='App-header'>
             <img src={logo} className='App-logo' alt='logo' />
             <h1 className='App-title'>
-              Ticketmaster event discovery!
+              TicketmasterBrowser
             </h1>
-            <p>
-              Welcome to my ticketmaster event, attraction, and venue discovery site. This site allows you to browse
-              Ticketmaster listings to find events of interest to you.
-            </p>
-            <Link className='showlink' to='/events/page/1'>
-              Events
-            </Link>
-            <Link className='showlink' to='/attractions/page/1'>
-              Attractions
-            </Link>
-            <Link className='showlink' to='/venues/page/1'>
-              Venue
-            </Link>
+            <nav>
+              <Link className='showlink' to='/'>
+                Home
+              </Link>
+              <Link className='showlink' to='/events/page/1'>
+                Events
+              </Link>
+              <Link className='showlink' to='/attractions/page/1'>
+                Attractions
+              </Link>
+              <Link className='showlink' to='/venues/page/1'>
+                Venue
+              </Link>
+            </nav>
           </header>
-          <br />
-          <br />
           <div className='App-body'>
             <Routes>
+              <Route exact path='/' element={<Home />} />
               <Route path='/events/page/:page' element={<Events />} />
               <Route path='/attractions/page/:page' element={<br/>} />
               <Route path='/venues/page/:page' element={<br />} />

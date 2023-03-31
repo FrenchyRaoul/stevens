@@ -22,8 +22,15 @@ input {
 }
 
 .App-header {
-  background-color: #1e8678;
-  height: 200px;
+  background-color: #6b5b95;
+  min-height: 200px;
+  padding: 20px;
+  color: #222;
+}
+
+.PageNav {
+  background-color: #feb236;
+  min-height: 20px;
   padding: 20px;
   color: #222;
 }
