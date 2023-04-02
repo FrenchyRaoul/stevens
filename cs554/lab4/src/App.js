@@ -5,6 +5,8 @@ import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 
 import Events from "./components/Events";
 import Home from "./components/Home";
+import Venues from "./components/Venues";
+import Attractions from "./components/Attractions";
 
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -30,7 +32,7 @@ function App() {
                 Attractions
               </Link>
               <Link className='navlink' to='/venues/page/1'>
-                Venue
+                Venues
               </Link>
             </nav>
           </header>
@@ -38,8 +40,11 @@ function App() {
             <Routes>
               <Route exact path='/' element={<Home />} />
               <Route path='/events/page/:page' element={<Events />} />
-              <Route path='/attractions/page/:page' element={<br/>} />
-              <Route path='/venues/page/:page' element={<br />} />
+              <Route path='/events/:id' element={<br />} />
+              <Route path='/attractions/page/:page' element={<Attractions />} />
+              <Route path='/attraction/:id' element={<br />} />
+              <Route path='/venues/page/:page' element={<Venues />} />
+              <Route path='/venues/:id' element={<br />} />
             </Routes>
           </div>
         </div>
