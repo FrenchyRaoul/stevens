@@ -7,6 +7,7 @@ import Events from "./components/Events";
 import Home from "./components/Home";
 import Venues from "./components/Venues";
 import Attractions from "./components/Attractions";
+import {AttractionInfo} from "./components/AttractionInfo";
 
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -42,7 +43,7 @@ function App() {
               <Route path='/events/page/:page' element={<Events />} />
               <Route path='/events/:id' element={<br />} />
               <Route path='/attractions/page/:page' element={<Attractions />} />
-              <Route path='/attraction/:id' element={<br />} />
+              <Route path='/attractions/:id' element={<AttractionInfo />} />
               <Route path='/venues/page/:page' element={<Venues />} />
               <Route path='/venues/:id' element={<br />} />
             </Routes>
