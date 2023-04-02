@@ -20,16 +20,16 @@ function App() {
               TicketmasterBrowser
             </h1>
             <nav>
-              <Link className='showlink' to='/'>
+              <Link className='navlink' to='/'>
                 Home
               </Link>
-              <Link className='showlink' to='/events/page/1'>
+              <Link className='navlink' to='/events/page/1'>
                 Events
               </Link>
-              <Link className='showlink' to='/attractions/page/1'>
+              <Link className='navlink' to='/attractions/page/1'>
                 Attractions
               </Link>
-              <Link className='showlink' to='/venues/page/1'>
+              <Link className='navlink' to='/venues/page/1'>
                 Venue
               </Link>
             </nav>

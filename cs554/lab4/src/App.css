@@ -35,6 +35,11 @@ input {
   color: #222;
 }
 
+.search {
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
 .App-title {
   font-size: 1.5em;
   font-weight: bold;
@@ -66,7 +71,8 @@ col-md-4 {
 .hometext {
   max-width: 60%;
 }
-.showlink {
+
+.navlink {
   padding: 0.4rem 0.8rem;
   background-color: white;
   border-radius: 3px;
@@ -75,10 +81,20 @@ col-md-4 {
   margin: 5px;
 }
 
-.showlink:hover {
+.navlink:hover {
   background-color: transparent;
   color: white;
   border: 2px solid white;
+}
+
+.navlink-disabled {
+  padding: 0.4rem 0.8rem;
+  background-color: gray;
+  border-radius: 3px;
+  color: #1e8678;
+  text-decoration: none !important;
+  margin: 5px;
+  pointer-events: none;
 }
 
 li {
@@ -123,21 +139,3 @@ ul {
 dt {
   font-weight: bold;
 }
-
-/*
-dt,
-dl {
-  padding: 0px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
-dt {
-  display: inline-block;
-}
-
-dd {
-  display: inline;
-  margin-left: 5px;
-}
-*/

@@ -15,6 +15,12 @@ async function getEventData(page) {
     return await axios.get(eventUrl)
 }
 
+async function searchEventData(searchTerm) {
+    const searchUrl = `https://app.ticketmaster.com/discovery/v2/events?apikey=${process.env.REACT_APP_TM_APIKEY}&countryCode=US&keyword=${encodeURIComponent(searchTerm)}`
+    console.log(`searching with url: ${searchUrl}`)
+    return await axios.get(searchUrl)
+}
+
 function findBestImageUrl(images) {
     // TODO: make this smarter
     return images[0]['url']
@@ -78,7 +84,7 @@ const EventCard = (event)=> {
                             {dateString}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" component="div" align="left">
-                            {getEventDescriptionList(event.classifications)}
+                            {event.classifications && getEventDescriptionList(event.classifications)}
                             {getTicketInfo(event)}
                         </Typography>
                     </CardContent>
@@ -98,6 +104,8 @@ const Events = ()=>{
     // const maxPage = useRef(); instead, use calculated max page
     const [page, setPage] = useState(Number(useParams()['page']))
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchData, setSearchData] = useState(undefined);
     const [eventData, setEventData] = useState(undefined);
 
     useEffect(() => {
@@ -108,7 +116,7 @@ const Events = ()=>{
                 console.log(`found page: ${page}`);
                 if (Number.isInteger(page)) {
                     const {data} = await getEventData(page - 1);
-                    setEventData(data['_embedded']['events']);
+                    setEventData(data['page']['totalElements'] ? data['_embedded']['events'] : []);
                     console.log(data);
                     setLoading(false);
                 } else {
@@ -121,33 +129,57 @@ const Events = ()=>{
         fetchData();
     }, []);
 
-    const morePages = (page < maxPage);
-    const lessPages = (page > 1);
+
+    useEffect(() => {
+        console.log('search useEffect fired');
+        async function fetchData() {
+            try {
+                console.log(`in fetch searchTerm: ${searchTerm}`);
+                const {data} = await searchEventData(searchTerm);
+                console.log('my search data: ')
+                setSearchData(data['page']['totalElements'] ? data['_embedded']['events'] : []);
+                setLoading(false);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        if (searchTerm) {
+            console.log('searchTerm is set');
+            fetchData();
+        }
+    }, [searchTerm]);
+
     const pages = {
-        'morePages': morePages,
-        'lessPages': lessPages,
-        'firstPage': '/events/page/1',
-        'previousPage': {'url': `/events/page/${page-1}`, 'page': page-1},
-        'nextPage': {'url': `/events/page/${page+1}`, 'page': page+1},
-        'lastPage': {'url': `/events/page/${maxPage}`, 'page': maxPage},
+        'maxPage': maxPage,
+        'baseUrl': '/events/page',
         'changePage': setPage
     }
+
+    const cardData = searchTerm ? searchData || [] : eventData
+    console.log(searchTerm)
+    console.log(searchData)
+    console.log(eventData)
 
     if (loading) {
         return (
             <div>
-                {<PageNav pages={pages} />}
+                {<PageNav pages={pages} searchFunc={setSearchTerm} />}
                 <h2>Loading....</h2>
             </div>
         );
     } else {
-        const cards = eventData.map((event) => {
-            return EventCard(event)
+        const cards = cardData.map((event) => {
+            try {
+                return EventCard(event)
+            } catch (e) {
+                console.log(event)
+                throw e
+            }
         })
 
         return (
             <div>
-                {<PageNav pages={pages} />}
+                {<PageNav pages={pages} searchFunc={setSearchTerm} />}
                 <br />
                 <br />
                 <Grid
