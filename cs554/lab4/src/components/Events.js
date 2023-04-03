@@ -5,7 +5,7 @@ import {Grid} from '@mui/material';
 
 import '../App.css';
 
-import EventCard from "./EventCard";
+import {EventCard} from "./EventInfo";
 import PageNav from "./PageNav";
 import NotFound404 from "./NotFound404";
 

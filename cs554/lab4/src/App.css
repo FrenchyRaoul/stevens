@@ -11,6 +11,22 @@
   height: 80px;
 }
 
+.home::after {
+  content: "";
+  background: url("img/concert.jpeg");
+  background-size: cover;
+  background-repeat: repeat-y;
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100vw;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
 input {
   border: 1px solid #1e8678;
 }
@@ -139,3 +155,23 @@ ul {
 dt {
   font-weight: bold;
 }
+
+.social-icon {
+  height: 40px;
+  width: 40px;
+  margin: 15px;
+  display: block;
+}
+
+.social-link {
+  margin-bottom: 25px
+}
+
+.social-link:hover {
+  outline-color: black;
+  outline-width: 2px;
+  outline-style: solid;
+  border-radius: 15px;
+}
+
+

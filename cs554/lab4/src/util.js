@@ -2,9 +2,20 @@ import imgNotFound from "./img/not_found.png";
 import {Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid} from "@mui/material";
 import React from "react";
 
-export function findBestImageUrl(images) {
+export function findBestImageUrl(images, findLargest) {
     // TODO: make this smarter
-    return (images && images[0]) ? images[0]['url'] : imgNotFound;
+    let image = undefined;
+    let maxPixels = 0;
+    if (images) {
+        for (let imgidx = 0; imgidx < images.length; imgidx++) {
+            let current = images[imgidx]
+            if (current['width'] * current['height'] > maxPixels) {
+                image = current;
+            }
+        }
+        return image['url'];
+    }
+    return imgNotFound;
 }
 
 export function makeCard(object, content, objectType) {
@@ -17,16 +28,18 @@ export function makeCard(object, content, objectType) {
                 margin: "0 auto",
                 padding: "0.1em",
             }}>
-                <CardActionArea href={object.url}>
+                <CardActionArea href={objectUrl}>
                     <CardMedia
                         sx={{height: 140}}
                         image={findBestImageUrl(object.images)}
                         component='img'
                         title="event image"
                     /> :
-                    {content}
+                    <CardContent>
+                        {content}
+                    </CardContent>
                 </CardActionArea>
-                <Button variant="outlined" size="medium" href={objectUrl}>More info...</Button>
+                <Button variant="outlined" size="medium" href={object.url}>Go to webpage... (external)</Button>
             </Card>
         </Grid>
     )

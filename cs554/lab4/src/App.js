@@ -8,6 +8,8 @@ import Home from "./components/Home";
 import Venues from "./components/Venues";
 import Attractions from "./components/Attractions";
 import {AttractionInfo} from "./components/AttractionInfo";
+import {EventInfo} from "./components/EventInfo";
+import {VenueInfo} from "./components/VenueInfo";
 
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -41,11 +43,11 @@ function App() {
             <Routes>
               <Route exact path='/' element={<Home />} />
               <Route path='/events/page/:page' element={<Events />} />
-              <Route path='/events/:id' element={<br />} />
+              <Route path='/events/:id' element={<EventInfo />} />
               <Route path='/attractions/page/:page' element={<Attractions />} />
               <Route path='/attractions/:id' element={<AttractionInfo />} />
               <Route path='/venues/page/:page' element={<Venues />} />
-              <Route path='/venues/:id' element={<br />} />
+              <Route path='/venues/:id' element={<VenueInfo />} />
             </Routes>
           </div>
         </div>

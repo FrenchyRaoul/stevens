@@ -7,7 +7,7 @@ import '../App.css';
 
 import PageNav from "./PageNav";
 import NotFound404 from "./NotFound404";
-import VenueCard from "./VenueCard";
+import {VenueCard} from "./VenueInfo";
 
 const maxDepth = 1000;
 const size = 25;
