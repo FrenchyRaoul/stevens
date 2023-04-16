@@ -28,9 +28,9 @@ function DeleteLocationModal(props) {
 
     const [deleteLocation] = useMutation(queries.DELETE_LOCATION, {
         update(cache, {data: {deleteLocation}}) {
-            const {locations} = cache.readQuery({query: queries.GET_LOCATIONS});
+            const {locations} = cache.readQuery({query: props.query});
             cache.writeQuery({
-                    query: queries.GET_LOCATIONS,
+                    query: props.query,
                     data: { locations: locations.filter((loc)=>loc.id !== deleteLocation.id) }
                 }
             )

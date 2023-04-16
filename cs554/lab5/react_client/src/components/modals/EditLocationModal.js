@@ -25,8 +25,6 @@ function EditLocationModal(props) {
     const [showEditModal, setShowEditModal] = useState(props.isOpen);
     const [location, setLocation] = useState(props.editLocation);
 
-    // const {loading, error, data} = useQuery(queries.GET_LOCATIONS);
-
     const [updateLocation] = useMutation(queries.UPDATE_LOCATION);
 
     const handleCloseEditModal = ()=>{
@@ -38,8 +36,6 @@ function EditLocationModal(props) {
     let image;
     let address;
     let name;
-    let userPosted;
-    let liked;
 
     const body = (
         <form className="form" id="edit-location" onSubmit={(e) =>{
@@ -50,18 +46,15 @@ function EditLocationModal(props) {
                     image: image.value,
                     address: address.value,
                     name: name.value,
-                    userPosted: userPosted.checked, // userPosted.value,
-                    liked: liked.checked, //liked.value
+                    userPosted: true, // userPosted.value,
                 }
             });
             image.value = '';
             address.value = '';
             name.value = '';
-            userPosted.checked = false;
-            liked.checked = false;
             setShowEditModal(false);
-            alert("Location updated!");
             props.handleClose()
+            alert("Location updated!");
         }}>
             <div className="form-group">
                 <label>Image
@@ -96,30 +89,6 @@ function EditLocationModal(props) {
                             name = node;
                         }}
                         defaultValue={location.name}
-                    />
-                </label>
-            </div>
-            <br />
-            <div className="form-group">
-                <label>Posted by User?
-                    <br />
-                    <input type="checkbox"
-                           ref={(node)=>{
-                               userPosted = node;
-                           }}
-                           defaultChecked={location.userPosted}
-                    />
-                </label>
-            </div>
-            <br />
-            <div className="form-group">
-                <label>Liked?
-                    <br />
-                    <input type="checkbox"
-                           ref={(node)=>{
-                               liked = node;
-                           }}
-                           defaultChecked={location.liked}
                     />
                 </label>
             </div>

@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import {getPhotosFromId} from "../place/Places";
 
 import {ApolloClient, HttpLink, InMemoryCache, ApolloProvider} from "@apollo/client";
 import {NavLink, BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
 import Home from './Home';
 import Locations from './Locations';
+import queries from "../queries";
+import NewLocation from "./NewLocation";
+import NotFound404 from "./NotFound404";
 
 
 const client = new ApolloClient({
@@ -25,7 +27,7 @@ function App() {
                     <header className="App-header">
                         <h1 className='App-title'>BoreSquare Location Browser</h1>
                         <nav>
-                            <NavLink className='navlink' to='/'>Home</NavLink>
+                            <NavLink className='navlink' to='/'>Find Places!</NavLink>
                             <NavLink className='navlink' to='/my-likes'>My Likes</NavLink>
                             <NavLink className='navlink' to='/my-locations'>My Locations</NavLink>
                             <NavLink className='navlink' to='/new-location'>New Location</NavLink>
@@ -33,10 +35,11 @@ function App() {
                     </header>
                 </div>
                 <Routes>
-                    <Route exact path='/' element={<Home />} />
-                    <Route path='/my-likes' element={<Locations />} />
-                    <Route path='/my-locations' element={<Locations />} />
-                    <Route path='/new-location' element={<h1>New location</h1>} />
+                    <Route exact path='/' element={<Locations query={queries.GET_LOCATIONS} />} />
+                    <Route exact path='/my-likes' element={<Locations query={queries.GET_LIKE_LOCATIONS} />} />
+                    <Route exact path='/my-locations' element={<Locations query={queries.GET_USER_LOCATIONS} />} />
+                    <Route exact path='/new-location' element={<NewLocation />} />
+                    <Route path='*' element={<NotFound404 />} status={404} />
                 </Routes>
             </Router>
         </ApolloProvider>

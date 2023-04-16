@@ -4,6 +4,7 @@ import ReactModal from 'react-modal';
 import {useQuery, useMutation} from '@apollo/client';
 
 import queries from '../../queries';
+import AddLocationForm from '../AddLocationForm'
 
 
 // For React-modal
@@ -25,11 +26,11 @@ const customStyles = {
 function AddLocationModal(props) {
     const [showAddModal, setShowAddModal] = useState(props.isOpen)
 
-    const [addLocation] = useMutation(queries.ADD_LOCATION, {
+    const [uploadLocation] = useMutation(queries.ADD_LOCATION, {
         update(cache, {data: {uploadLocation}}) {
-            const {locations} = cache.readQuery({query: queries.GET_LOCATIONS});
+            const {locations} = cache.readQuery({query: props.query});
             cache.writeQuery({
-                    query: queries.GET_LOCATIONS,
+                    query: props.query,
                     data: {locations: locations.concat([uploadLocation])}
                 }
             )
@@ -41,65 +42,65 @@ function AddLocationModal(props) {
         props.handleClose();
     }
 
-    let image;
-    let address;
-    let name;
+    // let image;
+    // let address;
+    // let name;
 
-    const body = (
-        <form className="form" id="add-location" onSubmit={(e) =>{
-            e.preventDefault();
-            addLocation({
-                variables:{
-                    image: image.value,
-                    address: address.value,
-                    name: name.value
-                }
-            });
-            image.value = '';
-            address.value = '';
-            name.value = '';
-            setShowAddModal(false);
-            alert("Location added!");
-            props.handleClose()
-        }}>
-            <div className="form-group">
-                <label>Image
-                    <br />
-                    <input
-                        ref={(node)=>{
-                            image = node;
-                        }}
-                        required
-                        autoFocus={true} />
-                </label>
-            </div>
-            <br />
-            <div className="form-group">
-                <label>Address
-                    <br />
-                    <input
-                        ref={(node)=>{
-                            address = node;
-                        }}
-                        required/>
-                </label>
-            </div>
-            <br />
-            <div className="form-group">
-                <label>Name
-                    <br />
-                    <input
-                        ref={(node)=>{
-                            name = node;
-                        }}
-                        required/>
-                </label>
-            </div>
-            <br />
-            <br />
-            <button className="button add-button" type='submit'>Add Location</button>
-        </form>
-    )
+    // const body = (
+    //     <form className="form" id="add-location" onSubmit={(e) =>{
+    //         e.preventDefault();
+    //         uploadLocation({
+    //             variables:{
+    //                 image: image.value,
+    //                 address: address.value,
+    //                 name: name.value,
+    //             }
+    //         });
+    //         image.value = '';
+    //         address.value = '';
+    //         name.value = '';
+    //         setShowAddModal(false);
+    //         props.handleClose()
+    //         alert("Location added!");
+    //     }}>
+    //         <div className="form-group">
+    //             <label>Image
+    //                 <br />
+    //                 <input
+    //                     ref={(node)=>{
+    //                         image = node;
+    //                     }}
+    //                     required
+    //                     autoFocus={true} />
+    //             </label>
+    //         </div>
+    //         <br />
+    //         <div className="form-group">
+    //             <label>Address
+    //                 <br />
+    //                 <input
+    //                     ref={(node)=>{
+    //                         address = node;
+    //                     }}
+    //                     required/>
+    //             </label>
+    //         </div>
+    //         <br />
+    //         <div className="form-group">
+    //             <label>Name
+    //                 <br />
+    //                 <input
+    //                     ref={(node)=>{
+    //                         name = node;
+    //                     }}
+    //                     required/>
+    //             </label>
+    //         </div>
+    //         <br />
+    //         <br />
+    //         <button className="button add-button" type='submit'>Add Location</button>
+    //     </form>
+    // )
 
     return (
         <div>
@@ -108,7 +109,11 @@ function AddLocationModal(props) {
                 isOpen={showAddModal}
                 contentLabel="Add Modal"
                 style={customStyles}>
-                {body}
+                <AddLocationForm
+                    handleClose={props.handleClose}
+                    uploadLocation={uploadLocation}
+                    setShowAddModal={setShowAddModal}
+                />
                 <button className='button cancel-button' onClick={()=>handleCloseAddModal()}>Cancel</button>
             </ReactModal>
 
