@@ -38,7 +38,7 @@ function EditLocationModal(props) {
     let name;
 
     const body = (
-        <form className="form" id="edit-location" onSubmit={(e) =>{
+        <form className="form w-100" id="edit-location" onSubmit={(e) =>{
             e.preventDefault();
             updateLocation({
                 variables:{
@@ -57,22 +57,24 @@ function EditLocationModal(props) {
             alert("Location updated!");
         }}>
             <div className="form-group">
-                <label>Image
+                <label className='w-100'>*Name
                     <br />
                     <input
+                        className='w-100'
                         ref={(node)=>{
-                            image = node;
+                            name = node;
                         }}
-                        autoFocus={true}
-                        defaultValue={location.image}
+                        required
+                        defaultValue={location.name}
                     />
                 </label>
             </div>
             <br />
             <div className="form-group">
-                <label>Address
+                <label className='w-100'>Address
                     <br />
                     <input
+                        className='w-100'
                         ref={(node)=>{
                             address = node;
                         }}
@@ -82,13 +84,15 @@ function EditLocationModal(props) {
             </div>
             <br />
             <div className="form-group">
-                <label>Name
+                <label className='w-100'>Image (url to online image)
                     <br />
                     <input
+                        className='w-100'
                         ref={(node)=>{
-                            name = node;
+                            image = node;
                         }}
-                        defaultValue={location.name}
+                        autoFocus={true}
+                        defaultValue={location.image}
                     />
                 </label>
             </div>

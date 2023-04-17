@@ -133,3 +133,7 @@ span {
   max-height: 300px;
   display: block;
 }
+
+.loc-card {
+  width: 350px;
+}

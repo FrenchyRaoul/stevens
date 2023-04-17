@@ -7,13 +7,13 @@ const uuid = require('uuid');
 const {getFormattedPlaces} = require('./Places');
 const {uploadLocation, getLikedLocations, getUserLocations, getLocation, deleteLocation, getCachedIds} = require('./Redis')
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 25;
 
 
 const typeDefs = gql`
 
 type Query {
-  locationPosts: [Location]
+  locationPosts(pageNum: Int): [Location]
   likeLocations: [Location]
   userPostedLocations: [Location]
   location(id: ID!): Location
@@ -39,19 +39,17 @@ type Mutation {
 
 const resolvers = {
     Query:{
-        locationPosts: async () => {
-            const places = await getFormattedPlaces({limit: PAGE_SIZE});
+        locationPosts: async (_, args) => {
+            const places = await getFormattedPlaces({limit: PAGE_SIZE}, args.pageNum);
             const cacheKeys = await getCachedIds();
             return places.map(async (placePromise)=>{
                 const place = await placePromise;
                 if (cacheKeys.includes(place.id)) {
-                    console.log(`found one`, place);
                     return {
                         ...place,
                         liked: true
                     }
                 } else {
-                    console.log(`did not find key`, place.id)
                     return place
                 }
             })
@@ -63,7 +61,7 @@ const resolvers = {
 
     Location:{
         id: (parentValue) => {
-            console.log(`parentValue in Location`, parentValue)
+            // console.log(`parentValue in Location`, parentValue)
             return parentValue.id
         },
         image: (parentValue) => parentValue.image,
@@ -75,7 +73,6 @@ const resolvers = {
 
     Mutation: {
         uploadLocation: async (_, args) => {
-            console.log(`uploading loc with args: `, args)
             const newLocation = {
                 id: uuid.v4(),
                 image: args.image,
@@ -85,12 +82,11 @@ const resolvers = {
                 liked: false,
             }
             await uploadLocation(newLocation)
-            console.log(`returning obj: `, newLocation)
             return newLocation
         },
 
         addPlaceToCache: async (_, args) => {
-            console.log(`uploading loc with args: `, args)
+            // console.log(`uploading loc with args: `, args)
             const newLocation = {
                 id: args.id,
                 image: args.image,
@@ -104,9 +100,8 @@ const resolvers = {
         },
 
         updateLocation: async (_, args) => {
-            console.log(`updating location with args: `, args)
+            // console.log(`updating location with args: `, args)
             const old = await getLocation(args.id);
-            console.log(args)
             if (args.image) {
                 old.image = args.image
             }
@@ -127,7 +122,7 @@ const resolvers = {
         },
 
         deleteLocation: async (_, args) => {
-            console.log(args);
+            // console.log(args);
             return await deleteLocation(args.id);
         }
 

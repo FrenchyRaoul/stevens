@@ -23,36 +23,40 @@ function AddLocationForm(props) {
             alert("Location added!");
         }}>
             <div className="form-group">
-                <label>Image
+                <label className='w-100'>*Name
                     <br />
                     <input
-                        ref={(node)=>{
-                            image = node;
-                        }}
-                        required
-                        autoFocus={true} />
-                </label>
-            </div>
-            <br />
-            <div className="form-group">
-                <label>Address
-                    <br />
-                    <input
-                        ref={(node)=>{
-                            address = node;
-                        }}
-                        required/>
-                </label>
-            </div>
-            <br />
-            <div className="form-group">
-                <label>Name
-                    <br />
-                    <input
+                        className='w-100'
                         ref={(node)=>{
                             name = node;
                         }}
-                        required/>
+                        required
+                        autoFocus={true}
+                    />
+                </label>
+            </div>
+            <br />
+            <div className="form-group">
+                <label className='w-100'>Address
+                    <br />
+                    <input
+                        className='w-100'
+                        ref={(node)=>{
+                            address = node;
+                        }}
+                    />
+                </label>
+            </div>
+            <br />
+            <div className="form-group">
+                <label className='w-100'>Image (url to online image)
+                    <br />
+                    <input
+                        className='w-100'
+                        ref={(node)=>{
+                            image = node;
+                        }}
+                    />
                 </label>
             </div>
             <br />

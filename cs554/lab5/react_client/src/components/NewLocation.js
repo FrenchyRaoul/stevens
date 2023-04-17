@@ -18,12 +18,18 @@ function NewLocation(props) {
     });
 
     return (
-        <div>
-            <AddLocationForm
-                uploadLocation={uploadLocation}
-                handleClose={()=>{}}
-                setShowAddModal={()=>{}}
-            />
+        <div className="card mt-5">
+            <div className="card-body">
+                <h5 className="card-title">Create a new location!</h5>
+                <p className="cap-first-letter:first-letter">
+                    Welcome to the BoreSquare Location Browser
+                </p>
+                <AddLocationForm
+                    uploadLocation={uploadLocation}
+                    handleClose={()=>{}}
+                    setShowAddModal={()=>{}}
+                />
+            </div>
         </div>
     )
 }

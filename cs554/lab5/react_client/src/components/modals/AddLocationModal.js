@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../App.css';
 import ReactModal from 'react-modal';
-import {useQuery, useMutation} from '@apollo/client';
+import {useMutation} from '@apollo/client';
 
 import queries from '../../queries';
 import AddLocationForm from '../AddLocationForm'

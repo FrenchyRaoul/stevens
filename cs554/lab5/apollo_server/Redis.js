@@ -54,7 +54,6 @@ async function getCachedIds() {
 async function getLikedLocations() {
     const redis = await getRedis();
     const data = await redis.hGetAll(locationKey)
-    console.log(`found like data: `, data);
     return Object.values(data).filter((raw_entry)=>{
         const entry = JSON.parse(raw_entry);
         return entry.liked
@@ -74,7 +73,6 @@ async function deleteLocation(id) {
     const redis = await getRedis();
     let location = JSON.parse(await redis.hGet(locationKey, id));
     let result = await redis.hDel(locationKey, id);
-    console.log(`result: `, result)
     if (result !== 1) {
         throw Error("something went wrong; nothing deleted from cache")
     }

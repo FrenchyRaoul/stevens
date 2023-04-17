@@ -1,8 +1,8 @@
 import {gql} from '@apollo/client';
 
 const GET_LOCATIONS = gql`
-  query {
-    locations: locationPosts {
+  query ($pageNum: Int) {
+    locations: locationPosts(pageNum: $pageNum) {
       id
       image
       name

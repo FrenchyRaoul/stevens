@@ -4,7 +4,6 @@ import './App.css';
 import {ApolloClient, HttpLink, InMemoryCache, ApolloProvider} from "@apollo/client";
 import {NavLink, BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
-import Home from './Home';
 import Locations from './Locations';
 import queries from "../queries";
 import NewLocation from "./NewLocation";

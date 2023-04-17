@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useMutation, useQuery} from '@apollo/client';
 
 import './App.css';
@@ -11,7 +11,6 @@ import DeleteLocationModal from "./modals/DeleteLocationModal";
 import EditLocationModal from "./modals/EditLocationModal";
 
 function toggleLike(updateFunc, location) {
-    console.log("running toggle like function!")
     updateFunc({
         variables:{
             id: location.id,
@@ -21,9 +20,7 @@ function toggleLike(updateFunc, location) {
 }
 
 function uploadAndLike(uploadMutation, deleteMutation, location) {
-    console.log("running upload and like function!")
     if (!location.liked) {
-        console.log("uploading location")
         uploadMutation({
             variables:{
                 ...location,
@@ -32,7 +29,6 @@ function uploadAndLike(uploadMutation, deleteMutation, location) {
         })
     }
     else {
-        console.log("deleting location")
         deleteMutation({
             variables:{
                 id: location.id
@@ -53,7 +49,7 @@ function uploadAndLike(uploadMutation, deleteMutation, location) {
 //
 
 function LocationCard(props) {
-    const {location, editFunc, deleteFunc} = props;
+    const {location, editFunc, deleteFunc, currentPage} = props;
 
     const [updateLocation] = useMutation(queries.UPDATE_LOCATION, {
         update(cache, {data: {updateLocation}}) {
@@ -79,7 +75,7 @@ function LocationCard(props) {
                 )
             }
 
-            const result = cache.readQuery({query: queries.GET_LOCATIONS});
+            const result = cache.readQuery({query: queries.GET_LOCATIONS, variables:{pageNum: currentPage}});
             if (result && result['locations']) {
                 const filtered = result['locations'].map((loc)=>{
                     if (loc.id === deleteLocation.id) return {...deleteLocation, liked: false};
@@ -94,52 +90,47 @@ function LocationCard(props) {
         }
     });
 
-    const [image, setImage] = useState(location.image)
-    useEffect(()=> {
-        async function checkImage() {
-            try {
-                require(location.image);
-            } catch {
-                setImage(noImg)
-            }
-        }
-        checkImage();
-    })
 
     const likeFunc = location.userPosted ?
         ()=>toggleLike(updateLocation, location) :
         ()=>uploadAndLike(addLocation, deleteLocation, location);
 
     const likeButton = (
-        <button className='button' onClick={likeFunc}>
-            {location.liked ? "Unlike!" : "Like!"}
+        <button className={location.liked ? 'btn btn-danger mr-2' : 'btn btn-success mr-2'} onClick={likeFunc}>
+            {location.liked ? "Remove like..." : "Like!"}
         </button>
     )
 
     return (
-        <div className="card" key={location.id}>
-            <img className="loc-img card-img-top"
-                 src={location.image}
-                 onError={({ currentTarget }) => {
-                     currentTarget.onerror = null; // prevents looping
-                     currentTarget.src=noImg;
-                 }} alt="image of location" />
-            <div className="card-body">
-                <h5 className="card-title">{location.name}</h5>
-                <p>{location.address}</p>
-                <br/>
-                {likeButton}
-                {(location.userPosted) &&
-                    <button className="button" onClick={() => editFunc(location)}>Edit</button>}
-                {(location.userPosted) &&
-                    <button className="button" onClick={() => deleteFunc(location)}>Delete</button>}
-                <br/>
+        <div className="col mb-5">
+            <div className="card h-100 loc-card">
+                <img className="loc-img card-img-top"
+                     src={location.image}
+                     onError={({ currentTarget }) => {
+                         currentTarget.onerror = null; // prevents looping
+                         currentTarget.src=noImg;
+                     }} alt="location" />
+                <div className="card-body">
+                    <h5 className="card-title">{location.name}</h5>
+                    <p>{location.address}</p>
+                    <br/>
+                </div>
+                <div className="card-footer">
+                    {likeButton}
+                    {(location.userPosted) &&
+                        <button className="btn btn-warning mr-2" onClick={() => editFunc(location)}>Edit</button>}
+                    {(location.userPosted) &&
+                        <button className="btn btn-danger mr-2" onClick={() => deleteFunc(location)}>Delete</button>}
+                    <br/>
+                </div>
             </div>
         </div>
     )
 }
 
 function Locations(props) {
+    const [page, setPage] = useState(1);
+
     const [showAddModal, setShowAddModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -148,7 +139,10 @@ function Locations(props) {
     const [editLocation, setEditLocation] = useState(null);
     const [deleteLocation, setDeleteLocation] = useState(null)
 
-    const {loading, error, data} = useQuery(props.query, {fetchPolicy: 'cache-and-network'})
+    const {loading, error, data} = useQuery(props.query, {
+        fetchPolicy: 'cache-and-network',
+        variables: { pageNum: page }
+    })
 
 
     const handleOpenEditModal = (location) => {
@@ -178,18 +172,43 @@ function Locations(props) {
         return (
             <div>
                 <div>
-                    <button className="button" onClick={handleOpenAddModal}>Create Location</button>
+                    {(props.query === queries.GET_USER_LOCATIONS) ?
+                        <div className="container">
+                            <div className="row justify-content-md-center">
+                                <div className="col col-lg-6 mt-5">
+                                    <button className="btn btn-block btn-success" onClick={handleOpenAddModal}>Create Location</button>
+                                </div>
+                            </div>
+                        </div>
+                        : ""
+                    }
                     <br/>
                     <br/>
-                    {locations.map((location) => {
-                        return <LocationCard
-                            location={location}
-                            editFunc={handleOpenEditModal}
-                            deleteFunc={handleOpenDeleteModal}
-                            query={props.query}
-                        />
-                    })}
+                    <div className="row row-cols-1 row-cols-md-2 g-3">
+                        {locations.map((location) => {
+                            return <LocationCard
+                                key={location.id}
+                                location={location}
+                                editFunc={handleOpenEditModal}
+                                deleteFunc={handleOpenDeleteModal}
+                                query={props.query}
+                                currentPage={page}
+                            />
+                        })}
+                    </div>
                     <br/>
+                    {(props.query === queries.GET_LOCATIONS) ?
+                        <div className="container">
+                            <div className="row justify-content-md-center">
+                                <div className="col col-lg-6 mb-5">
+                                    <button className="btn btn-block btn-primary" onClick={()=>{setPage(page + 1)}}>Get More!</button>
+                                </div>
+                            </div>
+                        </div>
+                        :
+                        ""
+                    }
+
                 </div>
                 {showAddModal && (
                     <AddLocationModal
