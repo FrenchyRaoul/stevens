@@ -1,5 +1,5 @@
 const redux = require('redux');
-const characterReducer = require('./character');
+const characterReducer = require('./characterReducer');
 
 const reducers = redux.combineReducers({
     character: characterReducer,

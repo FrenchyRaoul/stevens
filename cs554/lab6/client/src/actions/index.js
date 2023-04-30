@@ -1,15 +1,23 @@
-doSomethingFirst = (name, location) => ({
-  type: "FIRST_TYPE",
-  name: name,
-  location: location
+const collectCharacter = (characterId) => {
+    return {
+        type: "ADD_CHARACTER",
+        characterId: characterId
+    }
+}
+
+const removeCharacter = (collector, characterId) =>({
+    type: "REMOVE_CHARACTER",
+    collector: collector,
+    characterId: characterId
 })
 
-changeLocation = (location) =>({
-    type: "SECOND_TYPE",
-    location
+const setCollector = (collector) => ({
+    type: "SET_COLLECTOR",
+    collector: collector
 })
 
 module.exports = {
-    doSomethingFirst,
-    changeLocation,
+    collectCharacter,
+    removeCharacter,
+    setCollector
 }

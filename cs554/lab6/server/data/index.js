@@ -18,8 +18,13 @@ function getCharacterPageUrl(pageNumber) {
     const publickey = process.env.MARVEL_PUBLIC;
     const ts = new Date().getTime();
     const url = baseUrl + '?ts=' + ts + '&apikey=' + publickey + '&hash=' + getAPIHash(ts) + "&offset=" + offset;
-    console.log(`character page url: `, url);
     return url
+}
+
+
+async function checkMoreCharacters(pageNumber) {
+    const results = await getMarvelCharacters(pageNumber + 1)
+    return results['data']['count'] > 0
 }
 
 
@@ -28,7 +33,6 @@ function getCharacterUrl(id) {
     const publickey = process.env.MARVEL_PUBLIC;
     const ts = new Date().getTime();
     const url = baseUrl + '?ts=' + ts + '&apikey=' + publickey + '&hash=' + getAPIHash(ts)
-    console.log(`character url: `, url);
     return url
 }
 
@@ -39,7 +43,7 @@ async function getMarvelCharacters(pageNumber) {
 
 async function getCharacter(id) {
     const rawData = await axios.get(getCharacterUrl(id));
-    return rawData['data']
+    return rawData['data']['data']['results'][0]
 }
 
-module.exports = {getMarvelCharacters, getCharacter};
+module.exports = {getMarvelCharacters, getCharacter, checkMoreCharacters};
