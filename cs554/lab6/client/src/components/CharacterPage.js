@@ -2,10 +2,9 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import axios from "axios";
-import {CharacterCard, makeCharacterCard} from "./Character";
-import {NavLink, useParams} from "react-router-dom";
+import {CharacterCard} from "./Character";
+import {useParams} from "react-router-dom";
 import Spinner from "./Spinner";
-import {collectCharacter} from "../actions";
 import {useStore} from "react-redux";
 import NotFound404 from "./NotFound404";
 
