@@ -1,0 +1,193 @@
+.App {
+  text-align: center;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.App-logo {
+  height: 80px;
+}
+
+input {
+  border: 1px solid #1d6055;
+}
+
+.show-body {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.App-header {
+  background-color: #6b5b95;
+  min-height: 50px;
+  padding: 20px;
+  color: #222;
+}
+
+.PageNav {
+  background-color: #feb236;
+  min-height: 20px;
+  padding: 20px;
+  color: #222;
+}
+
+.search {
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+.App-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: white;
+}
+
+cite {
+  font-weight: bold;
+}
+table {
+  align-content: center;
+  margin: auto;
+}
+td {
+  padding: 10px;
+}
+
+.App-intro {
+  font-size: large;
+}
+.cap-first-letter:first-letter {
+  text-transform: capitalize;
+}
+.col-sm-6,
+col-md-4 {
+  border: 1px;
+}
+
+.hometext {
+  max-width: 60%;
+}
+
+.nav {
+  display: block;
+}
+
+.navlink {
+  padding: 0.4rem 0.8rem;
+  background-color: white;
+  border-radius: 3px;
+  color: #18524a;
+  text-decoration: none !important;
+  margin: 5px;
+}
+
+.navlink:hover {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.navlink-disabled {
+  padding: 0.4rem 0.8rem;
+  background-color: gray;
+  border-radius: 3px;
+  color: #1c665d;
+  text-decoration: none !important;
+  margin: 5px;
+  pointer-events: none;
+}
+
+.button {
+  padding: 0.4rem .8rem;
+  background-color: #28547a;
+  border-radius: 3px;
+  color: white;
+  text-decoration: none !important;
+}
+
+.button:hover {
+  padding: 0.4rem 0.8rem;
+  background-color: white;
+  border-radius: 3px;
+  color: #28547a;
+  text-decoration: none !important;
+}
+
+.char-img {
+  max-width: 350px;
+  max-height: 300px;
+  display: block;
+}
+
+.char-card {
+  width: 350px;
+}
+
+.collectorCard {
+  min-width: 350px;
+}
+
+.selectedCard {
+  border-color: #025402;
+  border-style: dashed;
+  border-width: 10px;
+}
+
+.char-img-mini {
+  max-width: 135px;
+  max-height: 100px;
+  display: block;
+}
+
+.char-card-mini {
+  width: 135px;
+  max-height: 250px;
+}
+
+.char-card-mini:hover
+{
+  border-style: solid;
+  border-color: blue;
+  border-width: 2px;
+  z-index:555555 !important;
+}
+
+.char-card-large {
+  min-width: 200px;
+}
+
+.loader {
+  border: 10px solid #f3f3f3;
+  border-top: 10px solid #3498db;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.full {
+  color: red
+}
+
+.notFull {
+  color: green
+}
+
+.btn-success {
+  background-color: #1f7332 !important;
+  border-color: #1f7332 !important;
+}

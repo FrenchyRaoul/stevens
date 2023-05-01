@@ -5,10 +5,15 @@ const collectCharacter = (characterId) => {
     }
 }
 
-const removeCharacter = (collector, characterId) =>({
+const removeCharacter = (characterId) =>({
     type: "REMOVE_CHARACTER",
-    collector: collector,
     characterId: characterId
+})
+
+const createCollector = (collector) => ({
+    type: "CREATE_COLLECTOR",
+    collector: collector
+
 })
 
 const setCollector = (collector) => ({
@@ -16,8 +21,16 @@ const setCollector = (collector) => ({
     collector: collector
 })
 
+const deleteCollector = (collector) => ({
+    type: "DELETE_COLLECTOR",
+    collector: collector
+})
+
+
 module.exports = {
     collectCharacter,
     removeCharacter,
-    setCollector
+    setCollector,
+    createCollector,
+    deleteCollector,
 }

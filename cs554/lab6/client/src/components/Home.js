@@ -3,7 +3,15 @@ import '../App.css';
 
 function Home(props) {
     return (
-        <h1>This is the Home page</h1>
+        <div className='container'>
+            <div className='row justify-content-center'>
+                <div className='col-lg-8'>
+                    <h1>Welcome to Marvel Character Collecting!</h1>
+                    <h2>Create collections of marvel characters!</h2>
+                    <p>Click "find characters" to browse, or select "collectors" to manage your collections.</p>
+                </div>
+            </div>
+        </div>
     )
 }
 
