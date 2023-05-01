@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import '../App.css';
 import {useStore} from "react-redux";
-import {collectCharacter, createCollector, deleteCollector, setCollector} from "../actions";
+import {createCollector, deleteCollector, setCollector} from "../actions";
 import noImg from "../img/no_img.png";
 import axios from "axios";
-import Character, {CharacterCard, makeCharacterCard} from "./Character";
+import {CharacterCard} from "./Character";
 
 function getCharacters(name, characterStore) {
     let characters;
@@ -62,6 +62,7 @@ function CollectorCard(props) {
             setCharacterCards(cards)
         }
         createCards()
+        // eslint-disable-next-line
     }, [characters])
 
 
@@ -152,7 +153,7 @@ function Collectors(props) {
     }
 
     const collectorCards = (
-        <div className="card-deck">
+        <div className="container">
             {collectors.map((name)=>{
                 const isSelected = (name === selected);
                 return <CollectorCard

@@ -4,7 +4,7 @@ import noImg from '../img/no_img.png'
 import axios from 'axios';
 import {NavLink, useParams} from "react-router-dom";
 import {useStore} from "react-redux";
-import {collectCharacter, deleteCollector, removeCharacter} from "../actions";
+import {collectCharacter, removeCharacter} from "../actions";
 
 // const {characterData} = require('../exampleData')
 
@@ -94,7 +94,7 @@ function makeLargeCharacterCard(characterData, collectButton) {
                         <h3>External Links:</h3>
                         <ol>
                             {characterData.urls.map((linkData=>{
-                                return <li><a href={linkData.url} target="_blank">{linkData.type}</a></li>
+                                return <li><a href={linkData.url} target="_blank" rel="noreferrer">{linkData.type}</a></li>
                             }))}
                         </ol>
                     </div>
@@ -119,9 +119,6 @@ function CharacterCard(props) {
     const [collection, setCollection] = useState(state['currentCollector']['characters'])
     const [collected, setCollected] = useState(collection.includes(characterId))
 
-    console.log(`collected: `, collected)
-    console.log(`collection: `, collection)
-
     useEffect(()=>{
         async function fetchData() {
             try {
@@ -144,6 +141,7 @@ function CharacterCard(props) {
         }
         updateCollection()
         updateLocalCollection()
+        // eslint-disable-next-line
     }, [collected])
 
     function updateCollected() {
@@ -176,6 +174,7 @@ function CharacterCard(props) {
                     store.dispatch(collectCharacter(characterId));
                     setCollected(true);
                 }}
+                disabled={(full)}
             >{(!full) ? "Collect!" : "Full"}</button>
         )
     }
@@ -190,11 +189,28 @@ function CharacterCard(props) {
 
 function Character(props) {
     const {id} = useParams();
+
+    const store = useStore();
+    const characterStore = store.getState()['character'];
+    const [full, setFull] = useState(characterStore['currentCollector']['characters'].length > 9)
+
+    function updateFull() {
+        const characterStore = store.getState()['character'];
+        setFull(characterStore['currentCollector']['characters'].length > 9)
+    }
+
+    store.subscribe(updateFull)
+
     return (
         <div className='container'>
             <div className='row justify-content-center'>
                 <div className='col-sm-6'>
-                    <CharacterCard characterId={parseInt(id)} key={id} updateCollection={()=>{}} large={true} />
+                    <CharacterCard
+                        characterId={parseInt(id)}
+                        key={"character:" + id}
+                        full={full}
+                        updateCollection={()=>{}}
+                        large={true} />
                 </div>
             </div>
         </div>
